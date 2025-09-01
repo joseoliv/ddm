@@ -1,0 +1,21 @@
+Trabalho 1 (individual)
+
+O trabalho consiste de um app que complete o Primeiro trabalho como definido em trabalhos/lib no repositório 
+
+https://github.com/joseoliv/ddm
+
+Veja esta descrição em trabalhos/docs/25 - Trabalho 1 - individual.txt
+
+
+- use pelo menos dois tamanhos de fonte com pelo menos três fontes diferentes. Use o Google fonts. Necessariamente, use EB Garamond e Lexend.
+
+Não é necessário nenhum "back-end". Só mostrar que, quando um botão, por exemplo, é apertado, algo acontece.
+
+Como é impossível eu corrigir todos os trabalhos e conferir tudo, vou fazer um questionário para vocês se auto-avaliarem. Durante a aula, vejo "pessoalmente" os trabalhos de algumas pessoas (sorteados aleatoriamente).
+
+No AVA, entreguem apenas um zip (não RAR, não outra coisa) com os diretórios 'assets' e 'lib'. Coloque os nomes completos dos membros do grupo no nome do arquivo, sem acentos e sem espaços. Use Upper Camel Case para cada nome de pessoa.  Separe os membros do grupo por um '-' se for trabalho em grupo.
+
+
+
+
+
