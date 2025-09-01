@@ -1,0 +1,43 @@
+Create a Flutter app with the following characteristics:
+
+- the app title is "Trabalhos"
+- in the initial screen there are three buttons in a centralized column: "Primeiro", "Segundo" e "Terceiro"
+
+- Nothing happens when the user clicks in the "Segundo" e "Terceiro" buttons.
+
+- the 'onPressed' action of the button "Segundo" is to show a stateful widget named PrimeiroWidgets
+
+- widget PrimeiroWidgets has a back button of Scaffold. PrimeiroWidgets has a left side widget named LeftSideWidget occuping 1/3 of the screen and a right side widget named RightSideWidget occuping 2/3 of the screen. 
+
+- the LeftSideWidget widget is a column of two items: the first, at the top, is a "Source code" button. When pressed, 
+the file_picker package is used to select a folder (directory). The folder or directory is kept in the String variable sourceCodeFolder.  The second widget of LeftSideWidget is a LeftSideMenu.
+
+- the LeftSideMenu is a list (use ListView inside a SingleChildScrollView) with buttons that are options. Or any other widget of any external package that is able to show a scrolable list with options. The options are Text fields with texts "Container", "Text", "Row", "Column", "Icon", "Image", "NetworkImage", "I/O", "Load asset image", "Load asset text", "Save to SP", "RichText", "DefaultTextStyle", "SelectableText", "Re_editor", "ListView", "Align", "Padding", "MediaQuery", "Wrap", "OrientationBuilder", "LayoutBuilder", "FractionallySizedBox", "TextField", "Form", "TextButton", "OutlinedButton", "IconButton", 
+"SegmentedButton", "Chip", "DropdownMenu", "Checkbox", "Switch", "Radio", "DatePickerDialog", "TimePickerDialog", 
+"InkWell", "GestureDetector", "Stack and Positioned".
+
+- RightSideWidget is a Column composed of a top button "Show code", a SizedBox(height: 30), and a widget that is based on the option chosen in the LeftSideMenu (show a Container if no option has been chosen. The container occupies all of the space). This widget that is the second in the Column, at the bottom of the Column, will be called ShowWidget.
+
+- When "Show code" is pressed, the file w_option.dart of folder sourceCodeFolder is shown in a large Dialog. Here, "option" in "w_option.dart" is the name of the option chosen with spaces replaced by "_". If no option has been chose, show an error Dialog. 
+
+- When an option of the LeftSideMenu is chosen, change the current widget of ShowWidget to the one chosen. The widget should be in a separate file based in the name of the option. For example, if the option chosen in LeftSideMenu is "Image", there should be a file named "w_image.dart" with the following content: 
+
+```Dart
+import 'package:flutter/material.dart';
+
+/// create a stateless widget that just show an image
+class WImage extends StatelessWidget {
+  const WImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: 
+	     /// Image widget
+    );
+  }
+}
+```
+
+Always use the same pattern: if the option is "Image", use statelessWidget widget "WImage" in file "w_image.dart", always use a Center without a child. Add a comment as in this example. The real widget will be added by students. 
+
