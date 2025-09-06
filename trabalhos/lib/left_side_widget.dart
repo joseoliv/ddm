@@ -5,15 +5,15 @@ import 'left_side_menu.dart';
 String? sourceCodeFolder;
 
 class LeftSideWidget extends StatefulWidget {
-  const LeftSideWidget({super.key});
+  final Map<String, Widget Function()> widgetMap;
+
+  const LeftSideWidget(this.widgetMap, {super.key});
 
   @override
   State<LeftSideWidget> createState() => LeftSideWidgetState();
 }
 
 class LeftSideWidgetState extends State<LeftSideWidget> {
-  
-
   void pickFolder() async {
     final result = await FilePicker.platform.getDirectoryPath();
     if (result != null) {
@@ -31,14 +31,20 @@ class LeftSideWidgetState extends State<LeftSideWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              /// rounded with circle 20
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+
+              /// light orange background
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            ),
             onPressed: pickFolder,
-            child: const Text("Source code"),
+            child: const Text("Source code folder"),
           ),
           const SizedBox(height: 10),
-          Expanded(
-            child: LeftSideMenu(
-            ),
-          ),
+          Expanded(child: LeftSideMenu(widget.widgetMap)),
         ],
       ),
     );

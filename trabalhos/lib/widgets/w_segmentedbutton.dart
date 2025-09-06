@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// create a stateless widget that just show an image
 class WSegmentedButton extends StatelessWidget {
   const WSegmentedButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('This is a SegmentedButton widget')
-    );
+    return Center(child: Text('This is a SegmentedButton widget'));
   }
 }
-

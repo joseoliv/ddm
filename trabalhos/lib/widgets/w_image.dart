@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// create a stateless widget that just show an image
 class WImage extends StatelessWidget {
   const WImage({super.key});
 

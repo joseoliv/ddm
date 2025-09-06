@@ -57,7 +57,7 @@ void main() {
 
     final buffer = StringBuffer();
     buffer.writeln("import 'package:flutter/material.dart';\n");
-    buffer.writeln("/// create a stateless widget that just show an image");
+    buffer.writeln("");
     buffer.writeln("class $className extends StatelessWidget {");
     buffer.writeln("  const $className({super.key});\n");
     buffer.writeln("  @override");

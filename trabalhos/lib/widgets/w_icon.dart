@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// create a stateless widget that just show an image
 class WIcon extends StatelessWidget {
   const WIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('This is a Icon widget')
-    );
+    return Center(child: Text('This is a Icon widget'));
   }
 }
-

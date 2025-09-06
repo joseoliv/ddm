@@ -25,7 +25,7 @@ the file_picker package is used to select a folder (directory). The folder or di
 ```Dart
 import 'package:flutter/material.dart';
 
-/// create a stateless widget that just show an image
+
 class WImage extends StatelessWidget {
   const WImage({super.key});
 
