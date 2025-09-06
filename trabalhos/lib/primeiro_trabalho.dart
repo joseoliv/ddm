@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'left_side_widget.dart';
 import 'right_side_widget.dart';
 import 'package:trabalhos/widgets/w_align.dart';
@@ -82,20 +83,11 @@ class _PrimeiroTrabalhoState extends State<PrimeiroTrabalho> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Primeiro trabalho'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Row(
-        children: [
-          Expanded(flex: 1, child: LeftSideWidget(widgetMap)),
-          Expanded(flex: 2, child: RightSideWidget()),
-        ],
-      ),
+    return Row(
+      children: [
+        Expanded(flex: 1, child: LeftSideWidget(widgetMap)),
+        Expanded(flex: 2, child: RightSideWidget()),
+      ],
     );
   }
 }

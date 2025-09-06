@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trabalhos/right_side_widget.dart';
 import 'package:trabalhos/segundo_trabalho.dart';
 import 'package:trabalhos/terceiro_trabalho.dart';
 import 'primeiro_trabalho.dart';
@@ -54,54 +55,48 @@ class TrabalhosApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _screens = [
+    PrimeiroTrabalho(),
+    SegundoTrabalho(),
+    TerceiroTrabalho(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      ref.read(selectedOptionProvider.notifier).state = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Trabalhos')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PrimeiroTrabalho(),
-                  ),
-                );
-              },
-              child: const Text('Primeiro'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SegundoTrabalho(),
-                  ),
-                );
-              },
-              child: const Text('Segundo'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TerceiroTrabalho(),
-                  ),
-                );
-              },
-              child: const Text('Terceiro'),
-            ),
-          ],
-        ),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.looks_one),
+            label: 'Primeiro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.looks_two),
+            label: 'Segundo',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.looks_3), label: 'Terceiro'),
+        ],
       ),
     );
   }

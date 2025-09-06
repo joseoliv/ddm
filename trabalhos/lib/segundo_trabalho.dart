@@ -37,20 +37,11 @@ class _SegundoTrabalhoState extends State<SegundoTrabalho> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Segundo trabalho'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Row(
+    return Row(
         children: [
           Expanded(flex: 1, child: LeftSideWidget(widgetMap)),
           Expanded(flex: 2, child: RightSideWidget()),
         ],
-      ),
-    );
+      );
   }
 }

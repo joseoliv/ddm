@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:re_editor/re_editor.dart';
+
+import 'package:re_highlight/languages/dart.dart'; // Import the Dart language mode
+import 'package:re_highlight/styles/atom-one-light.dart'; // Or any other theme you prefer
+
 import 'show_widget.dart';
 import 'left_side_widget.dart';
 
@@ -21,30 +26,18 @@ class RightSideWidget extends StatefulWidget {
 
 class RightSideWidgetState extends State<RightSideWidget> {
   late Widget currentWidget;
+  CodeLineEditingController? controller;
 
   @override
   void initState() {
     super.initState();
+    controller = CodeLineEditingController();
     currentWidget = Container(
       color: Colors.grey[200],
       alignment: Alignment.center,
       child: const Text("Select an option from the left"),
     );
   }
-
-  // void changeWidget((String, Widget Function()) option) {
-  //   selectedOption = option.$1;
-  //   currentWidget = _buildWidgetForOption(option.$2);
-  //   setState(() {});
-  // }
-
-  // Widget _buildWidgetForOption(Widget Function() builder) {
-  //   final fileName =
-  //       'w_${selectedOption.toLowerCase().replaceAll(' ', '_')}.dart';
-  //   // In real app, this would load actual widget from file
-  //   // For now, we just return a placeholder
-  //   return Center(child: builder());
-  // }
 
   void showCode(BuildContext context) {
     final selectedOption =
@@ -89,11 +82,14 @@ class RightSideWidgetState extends State<RightSideWidget> {
   }
 
   void _showCodeDialog(BuildContext context, String code, String title) {
-    showDialog(
+    controller?.text = code;
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => Dialog(
+      isScrollControlled: true,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: SizedBox(
-          width: 600,
+          width: double.infinity,
           height: 600,
           child: Column(
             children: [
@@ -115,14 +111,17 @@ class RightSideWidgetState extends State<RightSideWidget> {
               ),
               const Divider(),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: SelectableText(
-                      code,
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 12,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: CodeEditor(
+                    controller: controller!,
+                    readOnly: true,
+                    style: CodeEditorStyle(
+                      codeTheme: CodeHighlightTheme(
+                        languages: {
+                          'dart': CodeHighlightThemeMode(mode: langDart),
+                        },
+                        theme: atomOneLightTheme,
                       ),
                     ),
                   ),
