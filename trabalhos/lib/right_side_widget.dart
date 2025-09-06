@@ -39,6 +39,12 @@ class RightSideWidgetState extends State<RightSideWidget> {
     );
   }
 
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   void showCode(BuildContext context) {
     final selectedOption =
         ProviderScope.containerOf(
