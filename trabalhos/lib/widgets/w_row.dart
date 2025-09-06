@@ -7,8 +7,7 @@ class WRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Row widget
+      child: Text('This is a Row widget')
     );
   }
 }

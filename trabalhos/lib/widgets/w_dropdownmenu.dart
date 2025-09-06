@@ -7,8 +7,7 @@ class WDropdownMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// DropdownMenu widget
+      child: Text('This is a DropdownMenu widget')
     );
   }
 }

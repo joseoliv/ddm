@@ -7,8 +7,7 @@ class WReeditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Re_editor widget
+      child: Text('This is a Re_editor widget')
     );
   }
 }

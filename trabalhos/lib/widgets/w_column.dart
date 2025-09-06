@@ -7,8 +7,7 @@ class WColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Column widget
+      child: Text('This is a Column widget')
     );
   }
 }

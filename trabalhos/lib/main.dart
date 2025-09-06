@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'primeiro_widgets.dart';
 
 void main() {
-  runApp(const TrabalhosApp());
+  runApp(ProviderScope(child: TrabalhosApp()));
 }
 
 class TrabalhosApp extends StatelessWidget {
@@ -12,6 +13,7 @@ class TrabalhosApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Trabalhos',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomeScreen(),
     );
@@ -33,7 +35,9 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PrimeiroWidgets()),
+                  MaterialPageRoute(
+                    builder: (context) => const PrimeiroWidgets(),
+                  ),
                 );
               },
               child: const Text('Primeiro'),
@@ -43,16 +47,15 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PrimeiroWidgets()),
+                  MaterialPageRoute(
+                    builder: (context) => const PrimeiroWidgets(),
+                  ),
                 );
               },
               child: const Text('Segundo'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: null,
-              child: const Text('Terceiro'),
-            ),
+            ElevatedButton(onPressed: null, child: const Text('Terceiro')),
           ],
         ),
       ),

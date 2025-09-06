@@ -7,8 +7,7 @@ class WNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// NetworkImage widget
+      child: Text('This is a NetworkImage widget')
     );
   }
 }

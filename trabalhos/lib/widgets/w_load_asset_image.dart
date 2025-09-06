@@ -7,8 +7,7 @@ class WLoadassetimage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Load asset image widget
+      child: Text('This is a Load asset image widget')
     );
   }
 }

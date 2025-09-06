@@ -7,8 +7,7 @@ class WTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// TextField widget
+      child: Text('This is a TextField widget')
     );
   }
 }

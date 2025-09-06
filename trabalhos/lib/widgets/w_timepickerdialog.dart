@@ -7,8 +7,7 @@ class WTimePickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// TimePickerDialog widget
+      child: Text('This is a TimePickerDialog widget')
     );
   }
 }

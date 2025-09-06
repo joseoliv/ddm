@@ -7,8 +7,7 @@ class WSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Switch widget
+      child: Text('This is a Switch widget')
     );
   }
 }

@@ -7,8 +7,7 @@ class WFractionallySizedBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// FractionallySizedBox widget
+      child: Text('This is a FractionallySizedBox widget')
     );
   }
 }

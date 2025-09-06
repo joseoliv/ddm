@@ -7,8 +7,7 @@ class WRadio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Radio widget
+      child: Text('This is a Radio widget')
     );
   }
 }

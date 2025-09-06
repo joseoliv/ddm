@@ -1,7 +1,7 @@
 import 'dart:io';
 
 void main() {
-  final widgetsDir = Directory('lib/widgets');
+  final widgetsDir = Directory('widgets');
   if (!widgetsDir.existsSync()) {
     widgetsDir.createSync(recursive: true);
     print('Created directory: ${widgetsDir.path}');
@@ -63,8 +63,7 @@ void main() {
     buffer.writeln("  @override");
     buffer.writeln("  Widget build(BuildContext context) {");
     buffer.writeln("    return Center(");
-    buffer.writeln("      child: ");
-    buffer.writeln("         /// $option widget");
+    buffer.writeln("      child: Text('This is a $option widget')");
     buffer.writeln("    );");
     buffer.writeln("  }");
     buffer.writeln("}\n");

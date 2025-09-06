@@ -7,8 +7,7 @@ class WIO extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// I/O widget
+      child: Text('This is a I/O widget')
     );
   }
 }

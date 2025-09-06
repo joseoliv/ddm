@@ -7,8 +7,7 @@ class WTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// TextButton widget
+      child: Text('This is a TextButton widget')
     );
   }
 }

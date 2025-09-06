@@ -7,8 +7,7 @@ class WMediaQuery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// MediaQuery widget
+      child: Text('This is a MediaQuery widget')
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'left_side_menu.dart';
 
+String? sourceCodeFolder;
+
 class LeftSideWidget extends StatefulWidget {
   const LeftSideWidget({super.key});
 
@@ -10,7 +12,7 @@ class LeftSideWidget extends StatefulWidget {
 }
 
 class LeftSideWidgetState extends State<LeftSideWidget> {
-  String? sourceCodeFolder;
+  
 
   void pickFolder() async {
     final result = await FilePicker.platform.getDirectoryPath();
@@ -35,7 +37,6 @@ class LeftSideWidgetState extends State<LeftSideWidget> {
           const SizedBox(height: 10),
           Expanded(
             child: LeftSideMenu(
-              sourceCodeFolder: sourceCodeFolder,
             ),
           ),
         ],

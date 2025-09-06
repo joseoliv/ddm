@@ -7,8 +7,7 @@ class WWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Wrap widget
+      child: Text('This is a Wrap widget')
     );
   }
 }

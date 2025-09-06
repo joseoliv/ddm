@@ -7,8 +7,7 @@ class WIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Icon widget
+      child: Text('This is a Icon widget')
     );
   }
 }

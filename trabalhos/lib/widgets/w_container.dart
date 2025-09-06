@@ -7,8 +7,7 @@ class WContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Container widget
+      child: Text('This is a Container widget')
     );
   }
 }

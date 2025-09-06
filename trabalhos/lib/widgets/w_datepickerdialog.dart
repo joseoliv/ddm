@@ -7,8 +7,7 @@ class WDatePickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// DatePickerDialog widget
+      child: Text('This is a DatePickerDialog widget')
     );
   }
 }

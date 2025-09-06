@@ -7,9 +7,9 @@ class WImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Image widget
+      child: Image.asset(
+        'assets/images/ellen-volkova-qDoX7E9G7fY-unsplash.jpg',
+      ),
     );
   }
 }
-

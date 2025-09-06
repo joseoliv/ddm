@@ -7,8 +7,7 @@ class WInkWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// InkWell widget
+      child: Text('This is a InkWell widget')
     );
   }
 }

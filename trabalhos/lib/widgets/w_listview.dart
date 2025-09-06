@@ -7,8 +7,7 @@ class WListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// ListView widget
+      child: Text('This is a ListView widget')
     );
   }
 }

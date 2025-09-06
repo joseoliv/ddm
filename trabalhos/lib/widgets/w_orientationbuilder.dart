@@ -7,8 +7,7 @@ class WOrientationBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// OrientationBuilder widget
+      child: Text('This is a OrientationBuilder widget')
     );
   }
 }

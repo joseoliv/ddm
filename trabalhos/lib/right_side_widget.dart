@@ -1,6 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'show_widget.dart';
 import 'left_side_widget.dart';
+
+/// use flutter_riverpod to declare a provider for named [selectedOption]
+final selectedOptionProvider = StateProvider<(String, Widget Function())?>((
+  ref,
+) {
+  return null;
+});
 
 class RightSideWidget extends StatefulWidget {
   const RightSideWidget({super.key});
@@ -10,8 +20,6 @@ class RightSideWidget extends StatefulWidget {
 }
 
 class RightSideWidgetState extends State<RightSideWidget> {
-  String? sourceCodeFolder;
-  String selectedOption = "Container"; // default
   late Widget currentWidget;
 
   @override
@@ -24,29 +32,28 @@ class RightSideWidgetState extends State<RightSideWidget> {
     );
   }
 
-  void changeWidget(String option) {
-    setState(() {
-      selectedOption = option;
-      currentWidget = _buildWidgetForOption(option);
-    });
-  }
+  // void changeWidget((String, Widget Function()) option) {
+  //   selectedOption = option.$1;
+  //   currentWidget = _buildWidgetForOption(option.$2);
+  //   setState(() {});
+  // }
 
-  Widget _buildWidgetForOption(String option) {
-    final fileName = 'w_${option.toLowerCase().replaceAll(' ', '_')}.dart';
-    // In real app, this would load actual widget from file
-    // For now, we just return a placeholder
-    return Center(
-      child: Text(
-        'Widget for: $option\nFile: $fileName',
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+  // Widget _buildWidgetForOption(Widget Function() builder) {
+  //   final fileName =
+  //       'w_${selectedOption.toLowerCase().replaceAll(' ', '_')}.dart';
+  //   // In real app, this would load actual widget from file
+  //   // For now, we just return a placeholder
+  //   return Center(child: builder());
+  // }
 
   void showCode(BuildContext context) {
-    final state = context.findAncestorStateOfType<LeftSideWidgetState>();
-    final folder = state?.sourceCodeFolder;
-    if (folder == null) {
+    final selectedOption =
+        ProviderScope.containerOf(
+          context,
+          listen: false,
+        ).read(selectedOptionProvider.notifier).state?.$1 ??
+        '';
+    if (sourceCodeFolder == null) {
       _showErrorDialog(context, 'Source code folder not selected.');
       return;
     }
@@ -55,27 +62,12 @@ class RightSideWidgetState extends State<RightSideWidget> {
       return;
     }
 
-    final fileName = 'w_${selectedOption.toLowerCase().replaceAll(' ', '_')}.dart';
-    final fullPath = '$folder/$fileName';
+    final fileName =
+        'w_${selectedOption.toLowerCase().replaceAll(' ', '_')}.dart';
+    final fullPath = '$sourceCodeFolder/$fileName';
 
-    // Simulate reading the file content (in real app use `dart:io`)
-    final code = '''
-// Example content of $fullPath
-import 'package:flutter/material.dart';
-
-/// create a stateless widget that just show an image
-class W${selectedOption.replaceAll(' ', '')} extends StatelessWidget {
-  const W${selectedOption.replaceAll(' ', '')}({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: 
-         /// $selectedOption widget
-    );
-  }
-}
-    ''';
+    /// read file fullPath to code
+    final code = File(fullPath).readAsStringSync();
 
     _showCodeDialog(context, code, fileName);
   }
@@ -110,7 +102,10 @@ class W${selectedOption.replaceAll(' ', '')} extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.pop(ctx),
@@ -125,7 +120,10 @@ class W${selectedOption.replaceAll(' ', '')} extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: SelectableText(
                       code,
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
@@ -148,8 +146,17 @@ class W${selectedOption.replaceAll(' ', '')} extends StatelessWidget {
             child: const Text("Show code"),
           ),
           const SizedBox(height: 30),
-          Expanded(
-            child: ShowWidget(child: currentWidget),
+          Consumer(
+            builder: (context, ref, child) {
+              final currentWidget = ref.watch(selectedOptionProvider)?.$2();
+              if (currentWidget == null) {
+                return const Expanded(
+                  child: Center(child: Text("Select an option from the left")),
+                );
+              } else {
+                return Expanded(child: ShowWidget(child: currentWidget));
+              }
+            },
           ),
         ],
       ),

@@ -7,8 +7,7 @@ class WPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Padding widget
+      child: Text('This is a Padding widget')
     );
   }
 }

@@ -7,8 +7,7 @@ class WDefaultTextStyle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// DefaultTextStyle widget
+      child: Text('This is a DefaultTextStyle widget')
     );
   }
 }

@@ -7,8 +7,7 @@ class WSavetoSP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Save to SP widget
+      child: Text('This is a Save to SP widget')
     );
   }
 }

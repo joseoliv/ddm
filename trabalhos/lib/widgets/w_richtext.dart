@@ -7,8 +7,7 @@ class WRichText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// RichText widget
+      child: Text('This is a RichText widget')
     );
   }
 }

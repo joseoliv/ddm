@@ -7,8 +7,7 @@ class WLoadassettext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Load asset text widget
+      child: Text('This is a Load asset text widget')
     );
   }
 }

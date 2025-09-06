@@ -7,8 +7,7 @@ class WLayoutBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// LayoutBuilder widget
+      child: Text('This is a LayoutBuilder widget')
     );
   }
 }

@@ -7,8 +7,7 @@ class WStackandPositioned extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Stack and Positioned widget
+      child: Text('This is a Stack and Positioned widget')
     );
   }
 }

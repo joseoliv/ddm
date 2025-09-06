@@ -7,8 +7,7 @@ class WCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Checkbox widget
+      child: Text('This is a Checkbox widget')
     );
   }
 }

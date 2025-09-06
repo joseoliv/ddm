@@ -7,8 +7,7 @@ class WSegmentedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// SegmentedButton widget
+      child: Text('This is a SegmentedButton widget')
     );
   }
 }

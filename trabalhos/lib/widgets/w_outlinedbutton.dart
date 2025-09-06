@@ -7,8 +7,7 @@ class WOutlinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// OutlinedButton widget
+      child: Text('This is a OutlinedButton widget')
     );
   }
 }

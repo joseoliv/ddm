@@ -7,8 +7,7 @@ class WChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: 
-         /// Chip widget
+      child: Text('This is a Chip widget')
     );
   }
 }
