@@ -6,6 +6,7 @@ Explaining futures
 
 This shows how FutureBuilder works. The main code is below.
 
+```
   FutureBuilder<String>(
     future: loadFile('assets/$name'),
     builder: (context, snapshot) {
@@ -22,3 +23,4 @@ This shows how FutureBuilder works. The main code is below.
       }
     },
   );
+```
