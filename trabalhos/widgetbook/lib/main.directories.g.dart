@@ -33,18 +33,37 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'radio',
+    children: [
+      _widgetbook.WidgetbookLeafComponent(
+        name: 'WRadio',
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'Another',
+          builder: _widgetbook_workspace_widget_lib.buildWRadioUseCase,
+        ),
+      ),
+      _widgetbook.WidgetbookLeafComponent(
+        name: 'WRadioButtonGroup',
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'Radio Button Group',
+          builder: _widgetbook_workspace_widget_lib.buildRadioButtonUseCase,
+        ),
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'widgets',
     children: [
       _widgetbook.WidgetbookComponent(
         name: 'WImage',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'My image',
-            builder: _widgetbook_workspace_widget_lib.buildWImageUseCase,
+            name: 'Fake image loading',
+            builder: _widgetbook_workspace_widget_lib.buildWImageUseCaseLoading,
           ),
           _widgetbook.WidgetbookUseCase(
-            name: 'My image loading',
-            builder: _widgetbook_workspace_widget_lib.buildWImageUseCaseLoading,
+            name: 'Image',
+            builder: _widgetbook_workspace_widget_lib.buildWImageUseCase,
           ),
         ],
       ),
