@@ -1,4 +1,6 @@
-Trabalho 1 (individual)
+# Trabalho 1 (individual)
+
+## Descrição
 
 O trabalho consiste de um app que complete o Primeiro trabalho como definido em trabalhos/lib no repositório 
 
@@ -11,6 +13,8 @@ Isto é, você deve fazer exemplos de widgets que estão no diretório lib/widge
 Use pelo menos dois tamanhos de fonte com pelo menos três fontes diferentes. Use o Google fonts. Necessariamente, use EB Garamond e Lexend.
 
 Não é necessário nenhum "back-end". Só mostrar que, quando um botão, por exemplo, é apertado, algo acontece.
+
+## Orientações Gerais
 
 Como é impossível eu corrigir todos os trabalhos e conferir tudo, vou fazer um questionário para vocês se auto-avaliarem. Durante a aula, vejo "pessoalmente" os trabalhos de algumas pessoas (sorteados aleatoriamente).
 
