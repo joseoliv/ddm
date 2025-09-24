@@ -5,6 +5,9 @@ import 'package:trabalhos/widgets/w_image.dart';
 import 'package:trabalhos/widgets/w_align.dart';
 import 'package:widgetbook_workspace/radio_list_tile.dart';
 
+/// in the terminal, run:
+/// dart run build_runner watch
+
 @widgetbook.UseCase(name: 'Image', type: WImage)
 Widget buildWImageUseCase(BuildContext context) {
   return WImage();
@@ -38,4 +41,9 @@ Widget buildWRadioUseCase(BuildContext context) {
 )
 Widget buildRadioButtonUseCase(BuildContext context) {
   return const WRadioButtonGroup();
+}
+
+@widgetbook.UseCase(name: 'Container', type: Container)
+Widget buildWContainerUseCase(BuildContext context) {
+  return Container(width: 100, height: 100, color: Colors.blue);
 }

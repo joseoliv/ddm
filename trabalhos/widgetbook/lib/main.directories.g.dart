@@ -54,6 +54,13 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'widgets',
     children: [
+      _widgetbook.WidgetbookLeafComponent(
+        name: 'Container',
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'Container',
+          builder: _widgetbook_workspace_widget_lib.buildWContainerUseCase,
+        ),
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'WImage',
         useCases: [
