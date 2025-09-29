@@ -13,6 +13,10 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  void test() {
+    var s = context;
+  }
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -55,6 +59,22 @@ class _MainWidgetState extends State<MainWidget> {
               child: const Text('Example with Ticker'),
             ),
             const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                /// go to a new route with CounterWidget
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(title: Text('AnimatedContainer Example')),
+                      body: Center(child: AnimatedContainerExample()),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Example with AnimatedContainer'),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
@@ -62,7 +82,7 @@ class _MainWidgetState extends State<MainWidget> {
                     builder: (context) => Scaffold(
                       appBar: AppBar(
                         title: Text(
-                          'AnimationController without Animation Class',
+                          'Animation example without Animation Class',
                         ),
                       ),
                       body: Center(
@@ -278,6 +298,7 @@ class _AnimationExampleWithoutClassAnimationState
       vsync: this,
     );
     _controller.addListener(_update);
+    //_controller.forward();
     _controller.repeat(reverse: true);
   }
 
@@ -301,7 +322,10 @@ class _AnimationExampleWithoutClassAnimationState
       width: 100,
       height: 100,
       color: Colors.red,
-      transform: Matrix4.translationValues(_position, _position, 0),
+      transform:
+          /// rotate and translate the container based on _position
+          Matrix4.rotationZ(_position * 0.01)
+            ..translateByDouble(_position, _position, 0, 0),
     );
   }
 }
@@ -327,7 +351,12 @@ class _FooTransitionState extends State<FooTransition>
       vsync: this,
     );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    _controller.repeat(reverse: true, min: 0.3, max: 0.6, period: Duration(seconds: 3));
+    _controller.repeat(
+      reverse: true,
+      min: 0.3,
+      max: 0.6,
+      period: Duration(seconds: 3),
+    );
   }
 
   @override
@@ -467,6 +496,75 @@ class _AnimationExampleWithClassAnimationState
           ),
         );
       },
+    );
+  }
+}
+
+/// A stateful widget that demonstrates AnimatedContainer with purple color
+class AnimatedContainerExample extends StatefulWidget {
+  const AnimatedContainerExample({super.key});
+
+  @override
+  State<AnimatedContainerExample> createState() =>
+      _AnimatedContainerExampleState();
+}
+
+class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
+  bool _isExpanded = false;
+  double _size = 100.0;
+  Color _color = Colors.purple;
+  BorderRadius _borderRadius = BorderRadius.circular(8.0);
+
+  void _toggleAnimation() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      _size = _isExpanded ? 200.0 : 100.0;
+      _color = _isExpanded ? Colors.purple[800]! : const Color.fromARGB(255, 103, 155, 239);
+      _borderRadius = _isExpanded
+          ? BorderRadius.circular(50.0)
+          : BorderRadius.circular(8.0);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(seconds: 1),
+          curve: Curves.elasticOut,
+          width: _size,
+          height: _size,
+          decoration: BoxDecoration(
+            color: _color,
+            borderRadius: _borderRadius,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: _isExpanded ? 20.0 : 10.0,
+                spreadRadius: _isExpanded ? 5.0 : 2.0,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Icon(
+              _isExpanded ? Icons.star : Icons.favorite,
+              color: Colors.white,
+              size: _size * 0.4,
+            ),
+          ),
+        ),
+        const SizedBox(height: 30),
+        ElevatedButton(
+          onPressed: _toggleAnimation,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple,
+            foregroundColor: Colors.white,
+          ),
+          child: Text(_isExpanded ? 'Shrink' : 'Expand'),
+        ),
+      ],
     );
   }
 }
