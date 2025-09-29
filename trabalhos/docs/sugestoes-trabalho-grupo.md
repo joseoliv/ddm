@@ -3,7 +3,16 @@
 Texto ainda sendo atualizado
 
 - aplicativo para gerenciamento de um consultório, studio de pilates, etc.
-- aplicativo com recursos para o ENEM (este dá vários trabalhos)
+- aplicativo com recursos para o ENEM (este dá vários trabalhos): 
+  * Correção automática de gabaritos - Um app que permita aos alunos marcar suas respostas dos simulados e receber a correção imediata, com análise de desempenho por disciplina e comparação com os colegas. (Pro CEC)
+
+  * Agenda e planejamento de estudos - Aplicativo que funcione como um organizador: possibilite registrar provas, simulados e tarefas, além de criar planos de estudo personalizados. Pode sincronizar com calendários (como Google Calendar) para maior praticidade.
+
+  * Gamificação do aprendizado - Aplicativos no estilo “quiz game” ou jogos educativos que tornam a revisão mais dinâmica e competitiva. Estimula o engajamento por meio de rankings, medalhas e desafios semanais.
+
+  * Planner acadêmico integrado - Modelos como o UFSCar Planner (criado por alunos de Computação de São Carlos), que sincronizam com plataformas institucionais e organizam horários de aula automaticamente.
+
+  * Banco de questões dos simulados - Um repositório digital onde os alunos possam acessar questões aplicadas em simulados anteriores, refazê-las e acompanhar seu progresso. Pode incluir explicações ou comentários dos professores para potencializar o aprendizado. (Pro CEC ou geral) 
 
 
 ## Sobre Grupos e Notas
