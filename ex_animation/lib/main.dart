@@ -40,124 +40,119 @@ class _MainWidgetState extends State<MainWidget> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                /// go to a new route with CounterWidget
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(title: Text('Example with Ticker')),
-                      body: Center(child: CounterWidget()),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('Example with Ticker'),
-            ),
-            const SizedBox(height: 20),
-
-            ElevatedButton(
-              onPressed: () {
-                /// go to a new route with CounterWidget
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(title: Text('AnimatedContainer Example')),
-                      body: Center(child: AnimatedContainerExample()),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('Example with AnimatedContainer'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text(
-                          'Animation example without Animation Class',
-                        ),
-                      ),
-                      body: Center(
-                        child: AnimationExampleWithoutClassAnimation(),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('AnimationController without Animation Class'),
-            ),
-
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('AnimationController with Animation Class'),
-                      ),
-                      body: Center(child: AnimationExampleWithClassAnimation()),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('AnimationController with Animation Class'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('TweenAnimationBuilder Example'),
-                      ),
-                      body: Center(child: AnimationExampleTween()),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('TweenAnimationBuilder Example'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(title: Text('FooTransition')),
-                      body: Center(child: FooTransition()),
-                    ),
-                  ),
-                );
-              },
-              child: const Text('FooTransition'),
-            ),
-          ],
+        ElevatedButton(
+          onPressed: () {
+            /// go to a new route with CounterWidget
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(title: Text('Ticker Example')),
+                  body: Center(child: TickerCounterWidget()),
+                ),
+              ),
+            );
+          },
+          child: const Text('Ticker Example'),
         ),
         const SizedBox(height: 20),
+
+        ElevatedButton(
+          onPressed: () {
+            /// go to a new route with CounterWidget
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(title: Text('AnimatedContainer Example')),
+                  body: Center(child: AnimatedContainerExample()),
+                ),
+              ),
+            );
+          },
+          child: const Text('AnimatedContainer Example'),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: Text(
+                      'AnimationController without Animation Class Example',
+                    ),
+                  ),
+                  body: Center(
+                    child: AnimationControllerWithoutClassAnimation(),
+                  ),
+                ),
+              ),
+            );
+          },
+          child: const Text(
+            'AnimationController without Animation Class Example',
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(title: Text('TweenAnimationBuilder Example')),
+                  body: Center(child: AnimationExampleTween()),
+                ),
+              ),
+            );
+          },
+          child: const Text('TweenAnimationBuilder Example'),
+        ),
+
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: Text('AnimationController with Animation Class'),
+                  ),
+                  body: Center(child: AnimationExampleWithClassAnimation()),
+                ),
+              ),
+            );
+          },
+          child: const Text('AnimationController with Animation Class'),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(title: Text('FooTransition Example')),
+                  body: Center(child: FooTransition()),
+                ),
+              ),
+            );
+          },
+          child: const Text('FooTransition Example'),
+        ),
       ],
     );
   }
 }
 
 /// a stateful widget that has a counter
-class CounterWidget extends StatefulWidget {
-  const CounterWidget({super.key});
+class TickerCounterWidget extends StatefulWidget {
+  const TickerCounterWidget({super.key});
 
   @override
-  State<CounterWidget> createState() => _CounterWidgetState();
+  State<TickerCounterWidget> createState() => _TickerCounterWidgetState();
 }
 
-class _CounterWidgetState extends State<CounterWidget> {
+class _TickerCounterWidgetState extends State<TickerCounterWidget> {
   int _count = 0;
   double _x = 0.0;
   double _y = 0.0;
@@ -276,16 +271,16 @@ class _CounterWidgetState extends State<CounterWidget> {
 }
 
 /// a stateful widget that uses AnimationController without Animation class
-class AnimationExampleWithoutClassAnimation extends StatefulWidget {
-  const AnimationExampleWithoutClassAnimation({super.key});
+class AnimationControllerWithoutClassAnimation extends StatefulWidget {
+  const AnimationControllerWithoutClassAnimation({super.key});
 
   @override
-  State<AnimationExampleWithoutClassAnimation> createState() =>
-      _AnimationExampleWithoutClassAnimationState();
+  State<AnimationControllerWithoutClassAnimation> createState() =>
+      _AnimationControllerWithoutClassAnimationState();
 }
 
-class _AnimationExampleWithoutClassAnimationState
-    extends State<AnimationExampleWithoutClassAnimation>
+class _AnimationControllerWithoutClassAnimationState
+    extends State<AnimationControllerWithoutClassAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   double _position = 0.0;
@@ -324,8 +319,7 @@ class _AnimationExampleWithoutClassAnimationState
       color: Colors.red,
       transform:
           /// rotate and translate the container based on _position
-          Matrix4.rotationZ(_position * 0.01)
-            ..translateByDouble(_position, _position, 0, 0),
+          Matrix4.rotationZ(_position * 0.01),
     );
   }
 }
@@ -449,6 +443,7 @@ class _AnimationExampleTweenState extends State<AnimationExampleTween> {
 }
 
 /// a stateful widget that uses AnimationController to move a box diagonally
+/// https://www.youtube.com/watch?v=fneC7t4R_B0&list=PLjxrf2q8roU2v6UqYlt_KPaXlnjbYySua&index=5
 class AnimationExampleWithClassAnimation extends StatefulWidget {
   const AnimationExampleWithClassAnimation({super.key});
 
@@ -488,7 +483,13 @@ class _AnimationExampleWithClassAnimationState
         return Container(
           width: 30,
           height: 30,
-          color: Colors.blue,
+
+          /// I want that the color varies with the position
+          color: Colors.blue.withValues(
+            red: _animation.value / 300,
+            green: 1 / 2 + _animation.value / 600,
+            blue: 1 - _animation.value / 300,
+          ),
           transform: Matrix4.translationValues(
             _animation.value,
             _animation.value,
@@ -518,10 +519,12 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
   void _toggleAnimation() {
     setState(() {
       _isExpanded = !_isExpanded;
-      _size = _isExpanded ? 200.0 : 100.0;
-      _color = _isExpanded ? Colors.purple[800]! : const Color.fromARGB(255, 103, 155, 239);
+      _size = _isExpanded ? 200.0 : 300.0;
+      _color = _isExpanded
+          ? Colors.orange
+          : const Color.fromARGB(255, 103, 155, 239);
       _borderRadius = _isExpanded
-          ? BorderRadius.circular(50.0)
+          ? BorderRadius.circular(12.0)
           : BorderRadius.circular(8.0);
     });
   }
@@ -532,10 +535,10 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AnimatedContainer(
-          duration: const Duration(seconds: 1),
+          duration: const Duration(seconds: 2),
           curve: Curves.elasticOut,
           width: _size,
-          height: _size,
+          height: 100,
           decoration: BoxDecoration(
             color: _color,
             borderRadius: _borderRadius,
@@ -548,10 +551,26 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
             ],
           ),
           child: Center(
-            child: Icon(
-              _isExpanded ? Icons.star : Icons.favorite,
-              color: Colors.white,
-              size: _size * 0.4,
+            child: ListTile(
+              leading: Icon(
+                _isExpanded ? Icons.star : Icons.favorite,
+                color: Colors.white,
+                //size: _size * 0.4,
+              ),
+              trailing: Icon(
+                !_isExpanded ? Icons.star : Icons.favorite,
+                color: Colors.white,
+                //size: _size * 0.4,
+              ),
+
+              title: Text(
+                'Hello',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: _isExpanded ? 24 : 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ),

@@ -1879,6 +1879,7 @@ Videos:
 
 [Automatically Translate Your Flutter App](https://levelup.gitconnected.com/automatically-translate-your-flutter-app-d5761d6bc678) - An article describing a workflow for using tools to automate the translation of localization files.
 
+[Slang, a simpler package for internationalization](https://pub.dev/packages/slang)
 
 ## Testing and Debugging
 

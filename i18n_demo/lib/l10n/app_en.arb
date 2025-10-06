@@ -1,0 +1,10 @@
+{
+  "@@locale": "en",
+  "appTitle": "Language demo",
+  "@appTitle": { "description": "Title of the app" },
+
+  "greeting": "Hello!",
+  "@greeting": { "description": "Simple greeting" },
+
+  "selectLanguage": "Select a language"
+}
