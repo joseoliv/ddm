@@ -6,5 +6,16 @@
   "greeting": "Hello!",
   "@greeting": { "description": "Simple greeting" },
 
-  "selectLanguage": "Select a language"
+  "selectLanguage": "Select a language",  
+
+  "greetingOnDate": "Hello! Today is {date}",
+  "@greetingOnDate": {
+    "description": "Greeting with the current date",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  }
 }

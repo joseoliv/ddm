@@ -1871,7 +1871,7 @@ Videos:
 
 ## Internationalizing Flutter apps
 
-[Introduction](https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization) - The official documentation on internationalization (i18n) and localization (l10n) in Flutter.
+[Introduction](https://docs.flutter.dev/ui/internationalization) - The official documentation on internationalization (i18n) and localization (l10n) in Flutter.
 
 [Package flutter_localization](https://pub.dev/packages/flutter_localization) - A package designed to simplify the process of adding multiple language support to a Flutter app.
 

@@ -6,5 +6,8 @@
   "greeting": "Bonjour !",
   "@greeting": { "description": "Simple greeting" },
 
-  "selectLanguage": "Choisir une langue"
+  "selectLanguage": "Choisir une langue",
+
+  "greetingOnDate": "Bonjour ! Aujourd'hui, c'est {date}."
+
 }

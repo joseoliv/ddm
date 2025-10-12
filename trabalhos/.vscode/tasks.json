@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Pandoc: export current markdown to PDF",
+      "type": "shell",
+      "command": "pandoc",
+      "args": [
+        "${file}",
+        "-o",
+        "${fileDirname}\\ddm.pdf",
+        "--pdf-engine=xelatex",
+        "-V",
+        "colorlinks=true",
+        "-V",
+        "urlcolor=blue",
+        "-V",
+        "linkcolor=blue"
+      ],
+      "presentation": { "echo": true, "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    }
+  ]
+}

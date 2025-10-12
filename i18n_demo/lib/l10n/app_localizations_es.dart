@@ -16,4 +16,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectLanguage => 'Selecciona un idioma';
+
+  @override
+  String greetingOnDate(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '¡Hola! Hoy es $dateString';
+  }
 }

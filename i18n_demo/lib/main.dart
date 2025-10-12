@@ -82,6 +82,11 @@ class HomePage extends StatelessWidget {
           children: [
             Text(loc.greeting, style: const TextStyle(fontSize: 28)),
             const SizedBox(height: 12),
+            Text(
+              loc.greetingOnDate(DateTime.now()),
+              style: const TextStyle(fontSize: 28),
+            ),
+            const SizedBox(height: 12),
             Text(loc.selectLanguage),
           ],
         ),

@@ -1,0 +1,13 @@
+{
+    "cmake.ignoreCMakeListsMissing": true,
+
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "replace by the file name\\.md$",
+        "isAsync": false,
+        "cmd": "pandoc \"${file}\" -o \"${fileDirname}/ddm.pdf\" --pdf-engine=xelatex"
+      }
+    ]
+  }
+}

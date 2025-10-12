@@ -119,6 +119,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a language'**
   String get selectLanguage;
+
+  /// Greeting with the current date
+  ///
+  /// In en, this message translates to:
+  /// **'Hello! Today is {date}'**
+  String greetingOnDate(DateTime date);
 }
 
 class _AppLocalizationsDelegate
