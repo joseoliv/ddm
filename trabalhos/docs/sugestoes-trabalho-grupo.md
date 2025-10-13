@@ -25,7 +25,7 @@ Texto ainda sendo atualizado
 Estas observações se aplicam a todos os trabalhos. O aplicativo deve ser minimamente viável (Minimum Viable Product). Ou seja, deve ser possível usá-lo para uma finalidade útil. Além disto, o aplicativo deve seguir as seguintes especificações.
 
 
-* login pelo firebase, supabase ou equivalente. Deve ser possível logar pela Google. 
+* login pelo firebase, supabase ou equivalente. Deve ser possível logar pela Google. Use o pacote firebase_ui_auth. 
 * opção de mudar o tema. Pelo menos duas opões: claro, escuro. Inicialmente, o app deve usar o tema padrão do dispositivo
 * o aplicativo deve ter uma opção de mudar a língua. Pelo menos devem estar disponíveis: 
     - português

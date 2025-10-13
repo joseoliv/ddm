@@ -1853,6 +1853,8 @@ Videos:
 
 [Get started.](https://firebase.google.com/docs/auth/flutter/start) - The official documentation for getting started with Firebase Authentication in Flutter.
 
+[Video from Mitch Koko](https://www.youtube.com/watch?v=D5V3tknJ0NQ&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=5). Mais recente do que o vídeo do Heyflutter.
+
 [Video from Heyflutter.](https://www.youtube.com/watch?v=4vKiJZNPhss) - A tutorial from HeyFlutter on implementing Firebase Authentication.
 
 [Flutter Firebase Auth — The Cleanest & Fastest Way - IOS & Android](https://www.youtube.com/watch?v=rWamixHIKmQ) - A video tutorial that promises a clean and efficient method for setting up authentication.
@@ -1898,6 +1900,8 @@ Videos:
 [Continuous delivery with Flutter](https://docs.flutter.dev/deployment/cd) - The official guide on setting up Continuous Integration and Continuous Delivery (CI/CD) pipelines for your Flutter projects.
 
 ## Advanced Widgets, Packages, and Techniques
+
+[Firebase studio](https://studio.firebase.google.com/)
 
 [Package Mason](https://www.youtube.com/watch?v=qjA0JFiPMnQ&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=6) for pre-build apps. A video tutorial on Mason, a tool for creating and using reusable templates (called "bricks") to generate code files quickly. A good [article is here.](https://medium.com/@hadiyaaamir222/mason-a-complete-and-comprehensive-guide-caadee474d18) A comprehensive written guide to using Mason. Use the [link for searching for bricks.](https://brickhub.dev/search) The official repository for discovering and sharing Mason bricks. You will need to install the [command-line Git first.](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
