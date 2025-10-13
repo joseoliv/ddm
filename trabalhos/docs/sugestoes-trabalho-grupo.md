@@ -3,6 +3,7 @@
 Texto ainda sendo atualizado
 
 - aplicativo para gerenciamento de um consultório, studio de pilates, etc.
+- Refazer o jogo Emplake usando Flutter. Veja o jogo original em https://www.cyan-lang.org/emplake
 - aplicativo com recursos para o ENEM (este dá vários trabalhos): 
   * Correção automática de gabaritos - Um app que permita aos alunos marcar suas respostas dos simulados e receber a correção imediata, com análise de desempenho por disciplina e comparação com os colegas. (Pro CEC)
 
