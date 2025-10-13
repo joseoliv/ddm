@@ -139,6 +139,20 @@ class _MainWidgetState extends State<MainWidget> {
           },
           child: const Text('FooTransition Example'),
         ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Scaffold(
+                  appBar: AppBar(title: Text('Test Example')),
+                  body: Center(child: TestExample()),
+                ),
+              ),
+            );
+          },
+          child: const Text('Test Example'),
+        ),
       ],
     );
   }
@@ -347,9 +361,9 @@ class _FooTransitionState extends State<FooTransition>
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _controller.repeat(
       reverse: true,
-      min: 0.3,
-      max: 0.6,
-      period: Duration(seconds: 3),
+      min: 0.0,
+      max: 1.0,
+      period: Duration(seconds: 2),
     );
   }
 
@@ -364,20 +378,23 @@ class _FooTransitionState extends State<FooTransition>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(
-          onPressed: () {
-            if (_controller.isAnimating) {
-              _controller.stop();
-            } else {
-              _controller.repeat(reverse: true);
-            }
-          },
-          child: Text(_controller.isAnimating ? 'Stop' : 'Start'),
+        StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) =>
+              ElevatedButton(
+                onPressed: () {
+                  if (_controller.isAnimating) {
+                    _controller.stop();
+                  } else {
+                    _controller.repeat(reverse: true);
+                  }
+                  setState(() {});
+                },
+                child: Text(_controller.isAnimating ? 'Stop' : 'Start'),
+              ),
         ),
         const SizedBox(width: 30),
-        SizeTransition(
-          sizeFactor: _animation,
-          axis: Axis.vertical,
+        RotationTransition(
+          turns: _animation,
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -536,7 +553,7 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
       children: [
         AnimatedContainer(
           duration: const Duration(seconds: 2),
-          curve: Curves.elasticOut,
+          curve: Curves.bounceOut,
           width: _size,
           height: 100,
           decoration: BoxDecoration(
@@ -584,6 +601,73 @@ class _AnimatedContainerExampleState extends State<AnimatedContainerExample> {
           child: Text(_isExpanded ? 'Shrink' : 'Expand'),
         ),
       ],
+    );
+  }
+}
+
+/// a stateful widget named TestExample with a container of size 100x100 and color purple
+class TestExample extends StatefulWidget {
+  const TestExample({super.key});
+
+  @override
+  State<TestExample> createState() => _TestExampleState();
+}
+
+/// A stateful widget that represents the state of the TestExample
+class _TestExampleState extends State<TestExample>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimationController _colorController;
+
+  late Animation<double> _animation;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _colorController = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 100, end: 300).animate(_controller);
+    _colorAnimation = ColorTween(
+      begin: Colors.blue,
+      end: Colors.orange,
+    ).animate(_colorController);
+    _controller.repeat(reverse: true);
+    _colorController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _colorAnimation,
+      builder: (context, child) {
+        return GestureDetector(
+          onTap: () {
+            if (_controller.isAnimating) {
+              _controller.stop();
+            } else {
+              _controller.repeat(reverse: true);
+            }
+          },
+          child: Container(
+            width: _animation.value,
+            height: _animation.value,
+            color: _colorAnimation.value,
+          ),
+        );
+      },
     );
   }
 }

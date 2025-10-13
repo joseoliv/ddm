@@ -128,7 +128,7 @@ Future<dynamic> loadJson(String filename) async {
   File f = File(filename);
 
   // Use Isolate.run to perform heavy parsing in the background.
-  final json = await Isolate.run(() async {
+  final json = await Isolate.run(  () async {
     final String jsonStr = await f.readAsString();
     final jsonObj = jsonDecode(jsonStr);
     return jsonObj;

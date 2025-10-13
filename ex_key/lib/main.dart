@@ -9,7 +9,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyHomePage());
+    return MaterialApp(home: MyHomePage(), debugShowCheckedModeBanner: false);
   }
 }
 
@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // Problematic usage: NO KEY provided
             ProblematicWidget(
               text: _showFirst ? 'First' : 'Second',
-              // key: ValueKey(_showFirst), // Uncomment this to fix!
+              key: ValueKey(_showFirst), // Uncomment this to fix!
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -71,8 +71,14 @@ class _ProblematicWidgetState extends State<ProblematicWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Widget Text: ${widget.text}'),
-        Text('Counter: $_counter'),
+        Text(
+          'Widget Text: ${widget.text}',
+          style: const TextStyle(fontSize: 24),
+        ),
+        const SizedBox(height: 12),
+        Text('Counter: $_counter', style: const TextStyle(fontSize: 24)),
+        const SizedBox(height: 12),
+
         ElevatedButton(
           onPressed: () {
             // This setState should update the counter
@@ -82,7 +88,10 @@ class _ProblematicWidgetState extends State<ProblematicWidget> {
               _counter++;
             });
           },
-          child: const Text('Increment Counter'),
+          child: const Text(
+            'Increment Counter',
+            style: TextStyle(fontSize: 20),
+          ),
         ),
       ],
     );

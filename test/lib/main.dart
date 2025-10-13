@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test/traducoes/loc.dart';
 
 void main() {
   runApp(const MainApp());
@@ -25,9 +26,36 @@ class _MainAppState extends State<MainApp> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+              Row(
+                children: [
+                  Text(
+                    Translate.getTranslation.home,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    Translate.getTranslation.search,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    Translate.getTranslation.settings,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+                ],
+              ),
             ],
           ),
         ),
@@ -35,28 +63,91 @@ class _MainAppState extends State<MainApp> {
           child:
               /// Use layout builder to get the constraints
               /// and change the color of the container based on the width
-              Stack(
-                children: [
-                  /// positioned container of size 100x100 at top left
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      color: Colors.red,
-                    ),
-                  ),
-                  Positioned(
-                    left: 50,
-                    top: 50,
-                    child: Container(
-                      width: 300,
-                      height: 300,
-                      color: const Color.fromARGB(255, 98, 54, 244),
-                    ),
-                  ),
-                ],
+              /// menu with portuguese, english, french
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 600) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Translate.getTranslation.appTitle,
+                          style: TextStyle(fontSize: 32, color: _color),
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('pt');
+                            });
+                          },
+                          child: Text('Português'),
+                        ),
+                        SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('en');
+                            });
+                          },
+                          child: Text('English'),
+                        ),
+                        SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('fr');
+                            });
+                          },
+                          child: Text('Français'),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Translate.getTranslation.appTitle,
+                          style: TextStyle(fontSize: 32, color: _color),
+                        ),
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('pt');
+                            });
+                          },
+                          child: Text('Português'),
+                        ),
+                        SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('en');
+                            });
+                          },
+                          child: Text('English'),
+                        ),
+                        SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              Translate.getTranslation =
+                                  Translate.getTranslationFromLocale('fr');
+                            });
+                          },
+                          child: Text('Français'),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
         ),
       ),
