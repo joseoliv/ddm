@@ -262,9 +262,97 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(user.email ?? ''),
+                  const SizedBox(height: 20),
+
+                  /// an ElevatedButton to create folders for each student email in the list
+                  /// When pressed, it calls createFolderForEachStudent with emailStudents
+                  ElevatedButton(
+                    onPressed: () {
+                      createFolderForEachStudent(emailStudents);
+                    },
+                    child: const Text('Create Student Folders'),
+                  ),
                 ],
               ),
       ),
     );
+  }
+}
+
+/// create a folder in firebase for each student email in the list. Use the email
+/// till the @ as the folder name.
+void createFolderForEachStudent(List<String> emails) {
+  final firestore = FirebaseFirestore.instance;
+
+  for (final email in emails) {
+    final folderName = email.split('@').first;
+    firestore.collection('students').doc(folderName).set({
+      'email': email,
+    });
+    print('Created folder for $folderName');
+  }
+}
+
+const List<String> emailStudents = [
+  'alineriemer@estudante.ufscar.br',
+  'beatrizbarbosa@estudante.ufscar.br',
+  'brunoferraz@estudante.ufscar.br',
+  'bruno.povliuk@estudante.ufscar.br',
+  'caiojansen@estudante.ufscar.br',
+  'erik.silva@estudante.ufscar.br',
+  'felipe.bastos@estudante.ufscar.br',
+  'fernandofa@estudante.ufscar.br',
+  'fernandoaoki@estudante.ufscar.br',
+  'fidelcsp@estudante.ufscar.br',
+  'giovanamaciel@estudante.ufscar.br',
+  'giuliaazeka@estudante.ufscar.br',
+  'jhmcukier@estudante.ufscar.br',
+  'joaoaveraldo@estudante.ufscar.br',
+  'kaueago@estudante.ufscar.br',
+  'leonardoprado@estudante.ufscar.br',
+  'leonardosouza@estudante.ufscar.br',
+  'lucaszito@estudante.ufscar.br',
+  'lucaslfs@estudante.ufscar.br',
+  'marcela.ferraz@estudante.ufscar.br',
+  'marcus.caruso@estudante.ufscar.br',
+  'matteo@estudante.ufscar.br',
+  'mauricio.junior@estudante.ufscar.br',
+  'nicolaspratis@estudante.ufscar.br',
+  'pedro.nogueira@estudante.ufscar.br',
+  'rafaelcvs@estudante.ufscar.br',
+  'rafaelmp@estudante.ufscar.br',
+  'thiago.fernandes@estudante.ufscar.br',
+  'thiago.toyota@estudante.ufscar.br',
+  'vscastro59@estudante.ufscar.br',
+  'vinicius.rodrigues@estudante.ufscar.br',
+  'wilker.ribeiro42@estudante.ufscar.br'
+];
+
+void createNewLoginForUser(String newEmail, String newPassword) async {
+// String newEmail = 'new_user@example.com'; // Get this from UI input
+// String newPassword = 'securepassword';   // Get this from UI input
+
+  try {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: newEmail,
+      password: newPassword,
+    );
+    // New user account created successfully!
+    print('New user created: ${userCredential.user?.uid}');
+    // You might want to sign out the current admin user here
+    // if the intent was to immediately log in as the new user,
+    // or just inform the admin user that creation was successful.
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    } else {
+      print(e);
+    }
+    // Handle other errors (e.g., invalid email format)
+  } catch (e) {
+    print(e);
   }
 }
