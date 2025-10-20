@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "447974650971",
+    "project_id": "ddm-alunos",
+    "storage_bucket": "ddm-alunos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447974650971:android:581cad9da4de001bfbbb7e",
+        "android_client_info": {
+          "package_name": "org.ddmcoletivo25.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447974650971-bh8ri34d1lcf31gm7kdkeqm2vssa0egr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.ddmcoletivo25.app",
+            "certificate_hash": "547d4629f9edb304adf1db6c12df86702022875b"
+          }
+        },
+        {
+          "client_id": "447974650971-h22et3bn79p5fvcp52eptc1664g5mo68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLzNWTlNjkzcCo19db2eKWkxfHyWcesgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447974650971-h22et3bn79p5fvcp52eptc1664g5mo68.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "447974650971-sdm3rhfap6emnbg6qpfvkalubirldhgb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.ddm25.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

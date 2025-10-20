@@ -1,0 +1,15 @@
+Platform  Firebase App Id
+web       1:447974650971:web:955930eb50a4689ffbbb7e
+android   1:447974650971:android:581cad9da4de001bfbbb7e
+ios       1:447974650971:ios:98b39ba8e0db1e11fbbb7e
+windows   1:447974650971:web:d406058b368ad644fbbb7e
+
+
+Serial number: 1
+Valid from: Sat Aug 12 18:03:41 GMT-03:00 2023 until: Mon Aug 04 18:03:41 GMT-03:00 2053
+Certificate fingerprints:
+         SHA1: 54:7D:46:29:F9:ED:B3:04:AD:F1:DB:6C:12:DF:86:70:20:22:87:5B
+         SHA256: 3A:C2:FB:47:BE:6B:69:90:2E:C7:F4:7A:33:99:1D:2D:03:C8:41:DC:E8:97:2D:76:A9:B0:49:C1:3A:05:49:0D
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 1
