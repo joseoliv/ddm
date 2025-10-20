@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<ItemType> leftItems = [];
   List<ItemType> rightItems = [];
-  Offset? _offset;
+  Offset _offset = Offset.zero;
 
   @override
   void initState() {
@@ -56,10 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       data: type,
 
       /// o widget sendo arrastado pela tela
-      feedback: Material(
-        color: Colors.transparent,
-        child: Opacity(opacity: 0.5, child: _buildWidget(type)),
-      ),
+      feedback: Opacity(opacity: 0.8, child: child),
 
       /// o widget que fica fixo no lugar original quando está sendo arrastado
       childWhenDragging: Opacity(opacity: 0.2, child: child),
@@ -101,90 +98,122 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              /// left drag target
-              child: DragTarget<ItemType>(
-                onAcceptWithDetails: (details) {
-                  setState(() {
-                    if (!leftItems.contains(details.data)) {
-                      rightItems.remove(details.data);
-                      leftItems.add(details.data);
-                    }
-                  });
-                },
-                builder: (context, candidateData, rejectedData) {
-                  return Container(
-                    constraints: const BoxConstraints(
-                      minHeight: double.infinity,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+            Row(
+              children: [
+                Expanded(
+                  /// left drag target
+                  child: DragTarget<ItemType>(
+                    onMove: (details) {
+                      setState(() {
+                        _offset = details.offset;
+                      });
+                    },
+                    onWillAcceptWithDetails: (details) {
+                      //details.offset
+                      if (details.offset.dx < 150) {
+                        return true;
+                      }
+                      return details.data != ItemType.triangle;
+                    },
+                    onAcceptWithDetails: (details) {
+                      setState(() {
+                        if (!leftItems.contains(details.data)) {
+                          rightItems.remove(details.data);
+                          leftItems.add(details.data);
+                        }
+                      });
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return Container(
+                        constraints: const BoxConstraints(minHeight: 300),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: leftItems
-                            .map((item) => _buildDraggableItem(item))
-                            .toList(),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: leftItems
+                                .map((item) => _buildDraggableItem(item))
+                                .toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  /// right drag target
+                  child: DragTarget<ItemType>(
+                    onAcceptWithDetails: (details) {
+                      setState(() {
+                        if (!rightItems.contains(details.data)) {
+                          leftItems.remove(details.data);
+                          rightItems.add(details.data);
+                        }
+                      });
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return Container(
+                        constraints: const BoxConstraints(minHeight: 300),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: rightItems
+                                .map((item) => _buildDraggableItem(item))
+                                .toList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 32),
-            Expanded(
-              /// right drag target
-              child: DragTarget<ItemType>(
-                onAcceptWithDetails: (details) {
-                  setState(() {
-                    if (!rightItems.contains(details.data)) {
-                      leftItems.remove(details.data);
-                      rightItems.add(details.data);
-                    }
-                  });
-                },
-                builder: (context, candidateData, rejectedData) {
-                  return Container(
-                    constraints: const BoxConstraints(
-                      minHeight: double.infinity,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: rightItems
-                            .map((item) => _buildDraggableItem(item))
-                            .toList(),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('(${_offset.dx.toInt()}, ${_offset.dy.toInt()})'),
+                SizedBox(width: 10),
+
+                /// reset offset
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _offset = Offset.zero;
+                    });
+                  },
+                  child: const Text('Reset Offset'),
+                ),
+              ],
             ),
           ],
         ),
