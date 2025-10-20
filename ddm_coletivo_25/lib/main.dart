@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -12,8 +14,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize the GoogleSignIn singleton (new API requires initialize once).
-  await GoogleSignIn.instance.initialize();
+  // Initialize GoogleSignIn only for non-web to avoid issues on web platforms.
+  if (!kIsWeb) {
+    await GoogleSignIn.instance.initialize();
+  }
 
   runApp(const MyApp());
 }
@@ -26,8 +30,33 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Firebase Login Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
+      home: const AuthGate(),
+    );
+  }
+}
+
+/// Shows a loading indicator while Firebase Auth state is determined,
+/// then shows LoginScreen or HomePage depending on auth.
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // wait for auth initialization
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const HomePage();
+        }
+        return const LoginScreen();
+      },
     );
   }
 }
@@ -43,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isSigningIn = false;
   String? _errorMessage;
 
-  Future<void> signInWithGoogle() async {
+  Future<void> _signInWithGoogle() async {
     setState(() {
       _isSigningIn = true;
       _errorMessage = null;
@@ -51,69 +80,86 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       if (kIsWeb) {
-        // Web: use Firebase popup (simpler & supported on web)
+        // Web: Use Firebase popup flow
         final provider = GoogleAuthProvider();
-        await FirebaseAuth.instance.signInWithPopup(provider);
+        final userCredential =
+            await FirebaseAuth.instance.signInWithPopup(provider);
+
+        final user = userCredential.user;
+        if (user != null) {
+          await _upsertUserToFirestore(user);
+        }
       } else {
-        // Mobile / Desktop: use the new GoogleSignIn API
-        // `authenticate()` performs the interactive sign in and returns an account.
+        // Mobile/Desktop: use the new GoogleSignIn API
+        // authenticate() performs interactive sign-in
         final GoogleSignInAccount account =
             await GoogleSignIn.instance.authenticate();
 
-        // The returned account provides an `authentication` object.
-        // Different platforms / implementations may include different fields.
-        // We'll read idToken and accessToken if present.
-        final authResult = await account.authentication;
+        // Defensive: platform implementations may return differing token fields.
+        final auth = await account.authentication;
 
-        // Try to read idToken and accessToken in a safe way.
-        final dynamic dyn = authResult; // defensive cast
-        final String? idToken = dyn.idToken ?? dyn.id_token ?? null;
-        final String? accessToken = dyn.accessToken ?? dyn.access_token ?? null;
-
-        if (idToken == null && accessToken == null) {
-          // No tokens available — cannot build a Firebase credential.
-          throw Exception(
-              'No idToken or accessToken returned from Google sign-in.');
+        // Try common naming variants defensively
+        String? idToken;
+        String? accessToken;
+        try {
+          // Prefer Dart-style fields if present
+          idToken = (auth as dynamic).idToken ?? (auth as dynamic).id_token;
+        } catch (_) {
+          // ignore
+        }
+        try {
+          accessToken =
+              (auth as dynamic).accessToken ?? (auth as dynamic).access_token;
+        } catch (_) {
+          // ignore
         }
 
-        // Build credential using whichever tokens are available.
+        if (idToken == null && accessToken == null) {
+          throw Exception(
+              'No idToken or accessToken returned by Google sign-in. Check OAuth configuration.');
+        }
+
         final credential = GoogleAuthProvider.credential(
           idToken: idToken,
           accessToken: accessToken,
         );
 
-        // Sign in to Firebase with credential.
-        await FirebaseAuth.instance.signInWithCredential(credential);
-      }
+        final userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
 
-      // Optionally store user info in Firestore
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'name': user.displayName,
-          'email': user.email,
-          'photoUrl': user.photoURL,
-          'lastLogin': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+        final user = userCredential.user;
+        if (user != null) {
+          await _upsertUserToFirestore(user);
+        }
       }
-
-      // Navigate to home page
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
-    } catch (e) {
-      // Provide a helpful error message for debugging
+      // On success, StreamBuilder in AuthGate will navigate to HomePage automatically.
+    } catch (e, st) {
+      // Show a friendly error message for UI
       setState(() {
         _errorMessage = e.toString();
       });
+      // Helpful debug print
+      debugPrint('Google sign-in error: $e\n$st');
     } finally {
-      setState(() {
-        _isSigningIn = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSigningIn = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _upsertUserToFirestore(User user) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'name': user.displayName,
+        'email': user.email,
+        'photoUrl': user.photoURL,
+        'lastLogin': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('Failed to upsert user: $e');
     }
   }
 
@@ -121,40 +167,45 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Sign in with Google',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.login),
-                label: _isSigningIn
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Continue with Google'),
-                onPressed: _isSigningIn ? null : signInWithGoogle,
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        child: Card(
+          margin: const EdgeInsets.all(24),
+          elevation: 8,
+          child: Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const FlutterLogo(size: 72),
+                const SizedBox(height: 16),
+                const Text(
+                  'Sign in with Google',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-              ),
-              if (_errorMessage != null) ...[
                 const SizedBox(height: 20),
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center,
+                ElevatedButton.icon(
+                  onPressed: _isSigningIn ? null : _signInWithGoogle,
+                  icon: _isSigningIn
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.login),
+                  label: const Text('Continue with Google'),
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12)),
                 ),
+                if (_errorMessage != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    _errorMessage!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -166,9 +217,16 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Future<void> _signOut() async {
+    // Firebase sign out
     await FirebaseAuth.instance.signOut();
-    // For the new GoogleSignIn API, call instance.signOut()
-    await GoogleSignIn.instance.signOut();
+    // For non-web platforms, also sign out from GoogleSignIn instance
+    if (!kIsWeb) {
+      try {
+        await GoogleSignIn.instance.signOut();
+      } catch (e) {
+        debugPrint('GoogleSignIn signOut error: $e');
+      }
+    }
   }
 
   @override
@@ -176,43 +234,34 @@ class HomePage extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome'),
+        title: const Text('Home'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await _signOut();
-              if (context.mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              }
             },
-          ),
+          )
         ],
       ),
       body: Center(
         child: user == null
-            ? const Text('No user logged in.')
+            ? const Text('No user signed in.')
             : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (user.photoURL != null && user.photoURL!.isNotEmpty)
                     CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL!),
                       radius: 40,
+                      backgroundImage: NetworkImage(user.photoURL!),
                     ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Text(
-                    'Hello, ${user.displayName ?? 'User'}!',
-                    style: const TextStyle(fontSize: 22),
+                    'Hello, ${user.displayName ?? 'User'}',
+                    style: const TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    user.email ?? '',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
+                  const SizedBox(height: 6),
+                  Text(user.email ?? ''),
                 ],
               ),
       ),

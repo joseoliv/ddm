@@ -1,4 +1,4 @@
-git rm --cached lib/firebase_options.dartgit rm --cached lib/firebase_options.dart# Miscellaneous
+git rm --cached lib/firebase_options.dartgit rm --cached lib/firebase_options.dartgit push origin master# Miscellaneous
 *.class
 *.log
 *.pyc
