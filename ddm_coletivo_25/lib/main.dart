@@ -1,3 +1,4 @@
+import 'package:ddm_coletivo_25/not_used.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firebase_options.dart';
+import 'package:cloud_functions/cloud_functions.dart'; // Make sure to add this dependency to your pubspec.yaml
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -216,6 +218,17 @@ class _LoginScreenState extends State<LoginScreen> {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  // Future<void> _makeJoseAdmin() async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user == null) {
+  //     debugPrint('Not signed in');
+  //     return;
+  //   }
+  //   // Ensure a fresh token is attached to the callable request.
+  //   await user.getIdToken(true);
+  //   await makeUserAdminFromApp('fiP5NpKzjNUSBMbCbOXhVN4TqZH3');
+  // }
+
   Future<void> _signOut() async {
     // Firebase sign out
     await FirebaseAuth.instance.signOut();
@@ -264,14 +277,6 @@ class HomePage extends StatelessWidget {
                   Text(user.email ?? ''),
                   const SizedBox(height: 20),
 
-                  /// an ElevatedButton to create folders for each student email in the list
-                  /// When pressed, it calls createFolderForEachStudent with emailStudents
-                  ElevatedButton(
-                    onPressed: () {
-                      createFolderForEachStudent(emailStudents);
-                    },
-                    child: const Text('Create Student Folders'),
-                  ),
                 ],
               ),
       ),
@@ -293,40 +298,6 @@ void createFolderForEachStudent(List<String> emails) {
   }
 }
 
-const List<String> emailStudents = [
-  'alineriemer@estudante.ufscar.br',
-  'beatrizbarbosa@estudante.ufscar.br',
-  'brunoferraz@estudante.ufscar.br',
-  'bruno.povliuk@estudante.ufscar.br',
-  'caiojansen@estudante.ufscar.br',
-  'erik.silva@estudante.ufscar.br',
-  'felipe.bastos@estudante.ufscar.br',
-  'fernandofa@estudante.ufscar.br',
-  'fernandoaoki@estudante.ufscar.br',
-  'fidelcsp@estudante.ufscar.br',
-  'giovanamaciel@estudante.ufscar.br',
-  'giuliaazeka@estudante.ufscar.br',
-  'jhmcukier@estudante.ufscar.br',
-  'joaoaveraldo@estudante.ufscar.br',
-  'kaueago@estudante.ufscar.br',
-  'leonardoprado@estudante.ufscar.br',
-  'leonardosouza@estudante.ufscar.br',
-  'lucaszito@estudante.ufscar.br',
-  'lucaslfs@estudante.ufscar.br',
-  'marcela.ferraz@estudante.ufscar.br',
-  'marcus.caruso@estudante.ufscar.br',
-  'matteo@estudante.ufscar.br',
-  'mauricio.junior@estudante.ufscar.br',
-  'nicolaspratis@estudante.ufscar.br',
-  'pedro.nogueira@estudante.ufscar.br',
-  'rafaelcvs@estudante.ufscar.br',
-  'rafaelmp@estudante.ufscar.br',
-  'thiago.fernandes@estudante.ufscar.br',
-  'thiago.toyota@estudante.ufscar.br',
-  'vscastro59@estudante.ufscar.br',
-  'vinicius.rodrigues@estudante.ufscar.br',
-  'wilker.ribeiro42@estudante.ufscar.br'
-];
 
 void createNewLoginForUser(String newEmail, String newPassword) async {
 // String newEmail = 'new_user@example.com'; // Get this from UI input
@@ -356,3 +327,9 @@ void createNewLoginForUser(String newEmail, String newPassword) async {
     print(e);
   }
 }
+
+Future<void> makeJoseAdmin() async {
+  makeUserAdminFromApp(
+      'fiP5NpKzjNUSBMbCbOXhVN4TqZH3'); // Replace with Jose's actual UID
+}
+
