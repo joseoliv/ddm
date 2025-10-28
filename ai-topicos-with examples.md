@@ -1849,11 +1849,13 @@ Videos:
 
 [100 Firebase Tips, Tricks, and Screw-ups.](https://www.youtube.com/watch?v=iWEgpdVSZyg&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=24) - A presentation from a Google I/O event sharing valuable real-world experience with Firebase.
 
+[Video from Mitch Koko complete about Firebase](https://www.youtube.com/watch?v=0RWLaJxW7Oc)
+
 ## Authentication using Firebase
 
 [Get started.](https://firebase.google.com/docs/auth/flutter/start) - The official documentation for getting started with Firebase Authentication in Flutter.
 
-[Video from Mitch Koko](https://www.youtube.com/watch?v=D5V3tknJ0NQ&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=5). Mais recente do que o vídeo do Heyflutter.
+[Video from Mitch Koko](https://www.youtube.com/watch?v=D5V3tknJ0NQ&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h). Mais recente do que o vídeo do Heyflutter.
 
 [Video from Heyflutter.](https://www.youtube.com/watch?v=4vKiJZNPhss) - A tutorial from HeyFlutter on implementing Firebase Authentication.
 
