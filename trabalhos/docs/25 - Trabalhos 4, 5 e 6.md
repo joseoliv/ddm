@@ -29,7 +29,7 @@ O trabalho consiste de um aplicativo feito em um grupo de no máximo 3 pessoas. 
 
 As especificações do quarto, quinto e sexto trabalhos se seguem. 
 
-### Quarto trabalho (10/out)
+### Quarto trabalho (10/nov)
 
 Espera-se, para o quarto trabalho:
 
@@ -37,14 +37,14 @@ Espera-se, para o quarto trabalho:
 - as telas feitas em Flutter (podem ser modificadas depois), a animação, a fonte padrão, o login usando o Firebase (faça a adaptação do código fornecido pelo professor, mas mude a interface)
 - use o widgetbook 
 
-### Quinto trabalho (24/out)
+### Quinto trabalho (24/nov)
 
 - acesso à API
 - gerenciamento de estado
 - tema claro e escuro
 - use o widgetbook
 
-### Sexto trabalho (8/nov)
+### Sexto trabalho (8/dez)
 
 - internacionalização
 - o aplicativo deve ser funcional
