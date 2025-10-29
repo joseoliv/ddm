@@ -271,6 +271,37 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty || !email.contains('@')) {
+      setState(() => _errorMessage = 'Please enter a valid email address.');
+      return;
+    }
+
+    setState(() {
+      _isSigningIn = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Use default project domain (no ActionCodeSettings)
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      if (!mounted) return;
+      setState(() => _isSigningIn = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password reset email sent to $email')),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isSigningIn = false;
+        _errorMessage = e.message ?? e.code;
+      });
+      debugPrint('sendPasswordResetEmail error: ${e.code} ${e.message}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -425,13 +456,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     const SizedBox(height: 16),
-                    const Divider(),
-                    const SizedBox(height: 16),
 
                     // Google Sign In Button
                     OutlinedButton.icon(
                       onPressed: _isSigningIn ? null : _signInWithGoogle,
-                      icon: const Icon(Icons.login),
+                      icon: Image.asset(
+                        'assets/signin-assets/Android/png@1x/neutral/android_neutral_rd_na@1x.png',
+                        height: 20,
+                        width: 20,
+                      ),
                       label: const Text('Continue with Google'),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -441,6 +474,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         side: BorderSide(color: Colors.grey.shade300),
                       ),
                     ),
+
+                    // Password reset link
+                    if (!_isSignUpMode) ...[
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: _isSigningIn ? null : _resetPassword,
+                        child: const Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
 
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 16),
@@ -479,6 +527,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  static final TextEditingController _dataController = TextEditingController();
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -496,10 +545,10 @@ class HomePage extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('User'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () async {
               await _signOut();
             },
@@ -533,9 +582,84 @@ class HomePage extends StatelessWidget {
                     'Hello, ${user.displayName ?? user.email?.split('@').first ?? 'User'}',
                     style: const TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 20),
                   Text(user.email ?? ''),
                   const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _signOut,
+                    child: const Text('Sign Out'),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Show an AlertDialog to add a collection
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Add Info'),
+                            content:
+
+                                /// a textField with the String to be added to collection
+                                /// shared\uid  the text has key value 'info': 'some string'
+                                TextField(
+                              controller: _dataController,
+                              decoration: InputDecoration(
+                                labelText: 'Enter info',
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  // Add the collection logic here
+                                  FirebaseFirestore.instance
+                                      .collection('shared')
+                                      .doc(user.uid)
+                                      .set(
+                                    {
+                                      'info': _dataController.text,
+                                    },
+                                  );
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Add'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text('Add Info'),
+                  ),
+                  const SizedBox(height: 20),
+
+                  /// Show current info from collection shared\uid using StreamBuilder
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('shared')
+                        .doc(user.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      if (!snapshot.hasData || !snapshot.data!.exists) {
+                        return const Text('No info available.');
+                      }
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      return Text('Info: ${data['info'] ?? 'No info'}');
+                    },
+                  ),
                 ],
               ),
       ),

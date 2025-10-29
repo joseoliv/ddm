@@ -25,5 +25,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/signin-assets/Android/png@1x/neutral/android_neutral_rd_na@1x.png
 
 
