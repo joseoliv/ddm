@@ -654,7 +654,7 @@ class _HomePageState extends State<HomePage> {
                                           .doc(user.uid)
                                           .set({
                                         'info': _dataController.text,
-                                      });
+                                      }, SetOptions(merge: true));
                                       if (mounted) {
                                         Navigator.of(context).pop();
                                       }
