@@ -1843,6 +1843,8 @@ Videos:
 
 [Use Firebase to host your Flutter app on the web.](https://medium.com/flutter/must-try-use-firebase-to-host-your-flutter-app-on-the-web-852ee533a469) - An article from the Flutter team on how to deploy a Flutter web app using Firebase Hosting.
 
+[Use Firestore as a file system --- a must read](https://chat.deepseek.com/share/lc5bdcv3zdatekioe3)
+
 [Building chat app with Flutter and Firebase.](https://medium.com/flutter-community/building-a-chat-app-with-flutter-and-firebase-from-scratch-9eaa7f41782e) - A step-by-step tutorial on creating a real-time chat application.
 
 [Firebase - Back to the Basics](https://www.youtube.com/watch?v=q5J5ho7YUhA&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=18) - A video from the official Firebase channel reviewing fundamental concepts.

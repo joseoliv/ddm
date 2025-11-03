@@ -1,0 +1,22 @@
+Modifique cors.json com o endereço do seu app web.
+
+
+
+gsutil cors set "z:\current-projects\2025\ddm\ddm_coletivo_25\lib\cors.json" gs://ddm-alunos.firebasestorage.app
+
+Alternative: Navigate to the directory first
+
+cd z:\current-projects\2025\ddm\ddm_coletivo_25\lib
+gsutil cors set cors.json gs://ddm-alunos.firebasestorage.app
+
+
+###################################
+Para compiler para a web:  
+    flutter build web --release
+
+
+cd z:\current-projects\2025\ddm\ddm_coletivo_25\lib
+
+gsutil cors set cors.json gs://ddm-alunos.firebasestorage.app
+
+gsutil cors get gs://ddm-alunos.firebasestorage.app

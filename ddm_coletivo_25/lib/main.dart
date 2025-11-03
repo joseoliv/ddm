@@ -1,4 +1,4 @@
-import 'package:ddm_coletivo_25/not_used.dart';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:http/http.dart' as http;
 import 'firebase_options.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
 
 // https://isaacadariku.medium.com/google-sign-in-flutter-migration-guide-pre-7-0-versions-to-v7-version-cdc9efd7f182
 
@@ -25,7 +27,6 @@ Future<void> main() async {
       debugPrint('Failed to initialize Google Sign-In: $e');
     }
   }
-
   runApp(const MyApp());
 }
 
@@ -58,7 +59,7 @@ class AuthGate extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          return const HomePage();
+          return HomePage();
         }
         return const LoginScreen();
       },
@@ -525,9 +526,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  static final TextEditingController _dataController = TextEditingController();
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController _dataController = TextEditingController();
+  TextEditingController _pictureController = TextEditingController();
+
+  ImageProvider? _avatarProvider; // cache the image provider
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -543,124 +553,371 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+
+    // Initialize once per session to avoid recreating the NetworkImage every build
+    if (_avatarProvider == null &&
+        user?.photoURL != null &&
+        user!.photoURL!.isNotEmpty) {
+      _avatarProvider = NetworkImage(user.photoURL!);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('User'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () async {
-              await _signOut();
-            },
-          )
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            await _signOut();
+          },
+        ),
       ),
       body: Center(
         child: user == null
             ? const Text('No user signed in.')
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (user.photoURL != null && user.photoURL!.isNotEmpty)
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(user.photoURL!),
-                    )
-                  else
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.blue.shade200,
-                      child: Text(
-                        (user.displayName ?? user.email ?? 'U')[0]
-                            .toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Hello, ${user.displayName ?? user.email?.split('@').first ?? 'User'}',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(user.email ?? ''),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _signOut,
-                    child: const Text('Sign Out'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Show an AlertDialog to add a collection
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Add Info'),
-                            content:
+            : FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('shared')
+                    .doc(user.uid)
+                    .get(),
+                builder: (context, snapshot) {
+                  String info = '';
+                  if (snapshot.hasData && snapshot.data!.exists) {
+                    final data = snapshot.data!.data() as Map<String, dynamic>?;
+                    info = data?['info'] ?? 'No info';
+                  }
 
-                                /// a textField with the String to be added to collection
-                                /// shared\uid  the text has key value 'info': 'some string'
-                                TextField(
-                              controller: _dataController,
-                              decoration: InputDecoration(
-                                labelText: 'Enter info',
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_avatarProvider != null)
+                        // Use the cached provider, with a fallback on error
+                        ClipOval(
+                          child: Image(
+                            image: _avatarProvider!,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, err, st) => CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.blue.shade200,
+                              child: Text(
+                                (user.displayName ?? user.email ?? 'U')[0]
+                                    .toUpperCase(),
+                                style: const TextStyle(
+                                    fontSize: 32, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  // Add the collection logic here
-                                  FirebaseFirestore.instance
-                                      .collection('shared')
-                                      .doc(user.uid)
-                                      .set(
-                                    {
-                                      'info': _dataController.text,
+                          ),
+                        )
+                      else
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.blue.shade200,
+                          child: Text(
+                            (user.displayName ?? user.email ?? 'U')[0]
+                                .toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: 32, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Hello, ${user.displayName ?? user.email?.split('@').first ?? 'User'}',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(user.email ?? ''),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _signOut,
+                        child: const Text('Sign Out'),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Add Info'),
+                                content: TextField(
+                                  controller: _dataController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter info',
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection('shared')
+                                          .doc(user.uid)
+                                          .set({
+                                        'info': _dataController.text,
+                                      });
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
+                                      }
                                     },
-                                  );
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Add'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
+                                    child: const Text('Add'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Add Info'),
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Show current info from collection shared\uid using StreamBuilder
+                      StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('shared')
+                            .doc(user.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (!snapshot.hasData || !snapshot.data!.exists) {
+                            return const Text('No info available.');
+                          }
+                          final data =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Info: ${data['info'] ?? 'No info'}'),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: 250,
+                                child: SelectableText(
+                                    'Picture URL: ${data['pictureUrl'] ?? 'No picture'}'),
                               ),
                             ],
                           );
                         },
-                      );
-                    },
-                    child: const Text('Add Info'),
-                  ),
-                  const SizedBox(height: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Using shared/user.uid/get[\'info\']: $info',
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
 
-                  /// Show current info from collection shared\uid using StreamBuilder
-                  StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('shared')
-                        .doc(user.uid)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (!snapshot.hasData || !snapshot.data!.exists) {
-                        return const Text('No info available.');
-                      }
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      return Text('Info: ${data['info'] ?? 'No info'}');
-                    },
-                  ),
-                ],
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Choose picture'),
+                                content: TextField(
+                                  controller: _pictureController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter picture URL',
+                                  ),
+                                  enableInteractiveSelection: true,
+                                  autocorrect: false,
+                                  keyboardType: TextInputType.url,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        /// load file from _pictureController.text using http
+                                        final pictureUrl =
+                                            _pictureController.text;
+                                        try {
+                                          await uploadFirebase(
+                                              user.uid,
+                                              pictureUrl,
+                                              '${user.uid}/picture.jpg');
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Failed to upload picture to Firebase Storage')),
+                                          );
+                                        }
+                                        if (mounted) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Failed to load picture from URL')),
+                                        );
+                                      }
+                                    },
+                                    child: const Text('Upload'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Add picture'),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Picture'),
+                                content: FutureBuilder<String>(
+                                  future: () async {
+                                    final doc = await FirebaseFirestore.instance
+                                        .collection('shared')
+                                        .doc(user.uid)
+                                        .get();
+                                    final data = doc.data();
+                                    final url = data?['pictureUrl'] as String?;
+                                    if (url == null || url.isEmpty) {
+                                      throw Exception('No pictureUrl saved.');
+                                    }
+                                    return url;
+                                  }(),
+                                  builder: (context, urlSnap) {
+                                    if (urlSnap.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SizedBox(
+                                        width: 300,
+                                        height: 300,
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    }
+                                    if (urlSnap.hasError) {
+                                      return SizedBox(
+                                        width: 300,
+                                        height: 300,
+                                        child: Center(
+                                          child: SelectableText(
+                                            'Failed to load picture URL: ${urlSnap.error}',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error),
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    String url = urlSnap.data!;
+                                    if (url[0] == '"') {
+                                      // Clean up quotes if any
+                                      url = url.substring(1, url.length - 1);
+                                    }
+                                    // Web: load via network to avoid JS interop/getData issues.
+                                    if (kIsWeb) {
+                                      return SizedBox(
+                                        width: 300,
+                                        height: 300,
+                                        child: Image.network(
+                                          url,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (ctx, err, st) =>
+                                              Center(
+                                            child: Text(
+                                              'Failed to load picture (web).',
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    // Mobile/Desktop: fetch bytes from Storage.
+                                    return FutureBuilder<Uint8List?>(
+                                      future: FirebaseStorage.instance
+                                          .refFromURL(url)
+                                          .getData(5 * 1024 * 1024), // 5MB
+                                      builder: (context, bytesSnap) {
+                                        if (bytesSnap.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const SizedBox(
+                                            width: 300,
+                                            height: 300,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          );
+                                        }
+                                        if (bytesSnap.hasError ||
+                                            bytesSnap.data == null) {
+                                          // Fallback to network if getData fails
+                                          return SizedBox(
+                                            width: 300,
+                                            height: 300,
+                                            child: Image.network(
+                                              url,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (ctx, err, st) =>
+                                                  Center(
+                                                child: Text(
+                                                  'Failed to load picture.',
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return SizedBox(
+                                          width: 300,
+                                          height: 300,
+                                          child: Image.memory(bytesSnap.data!,
+                                              fit: BoxFit.cover),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Show picture'),
+                      ),
+                    ],
+                  );
+                },
               ),
       ),
     );
@@ -702,6 +959,71 @@ void createNewLoginForUser(String newEmail, String newPassword) async {
   }
 }
 
-Future<void> makeJoseAdmin() async {
-  makeUserAdminFromApp('fiP5NpKzjNUSBMbCbOXhVN4TqZH3');
+/// Uploads the bytes downloaded from an external URL directly to Firebase Storage.
+/// Avoids base64; uploads raw bytes with proper content-type metadata.
+///
+/// Returns the public download URL of the uploaded object.
+Future<String> uploadFirebase(
+  String userId,
+  String pictureUrl,
+  String pathInStorage, {
+  Duration httpTimeout = const Duration(seconds: 10),
+  Duration uploadTimeout = const Duration(seconds: 10),
+  Duration urlTimeout = const Duration(seconds: 10),
+  void Function(int bytesTransferred, int totalBytes)? onProgress,
+}) async {
+  final uri = Uri.parse(pictureUrl);
+
+  // Download the resource into memory
+  final response = await http.get(uri).timeout(httpTimeout);
+  if (response.statusCode != 200) {
+    throw Exception(
+        'Failed to GET resource: ${response.statusCode} ${response.reasonPhrase}');
+  }
+
+  final Uint8List bytes = response.bodyBytes;
+  final contentType = response.headers['content-type'] ?? 'image/jpeg';
+
+  // Upload to Firebase Storage
+  final ref = FirebaseStorage.instance.ref(pathInStorage);
+  final task = ref.putData(
+    bytes,
+    SettableMetadata(contentType: contentType),
+  );
+
+  if (onProgress != null) {
+    task.snapshotEvents.listen((s) {
+      final total = s.totalBytes;
+      final transferred = s.bytesTransferred;
+      onProgress(transferred, total);
+    });
+  }
+
+  // Wait for completion with timeout
+  await task.timeout(uploadTimeout);
+
+  // Get the download URL
+  final downloadUrl = await ref.getDownloadURL().timeout(urlTimeout);
+
+  // Save the URL (String) to Firestore, not the bytes
+  await FirebaseFirestore.instance.collection('shared').doc(userId).set({
+    'pictureUrl': downloadUrl, // Save URL string, not bytes
+  }, SetOptions(merge: true));
+
+  return downloadUrl;
+}
+
+/// Downloads bytes from Firebase Storage at the given path.
+///
+/// maxSize limits the number of bytes to fetch to protect memory usage.
+Future<Uint8List> downloadFirebase(
+  String pathInStorage, {
+  int maxSize = 10 * 1024 * 1024, // 10 MB default
+}) async {
+  final ref = FirebaseStorage.instance.ref(pathInStorage);
+  final data = await ref.getData(maxSize);
+  if (data == null) {
+    throw Exception('No data found at $pathInStorage');
+  }
+  return data;
 }

@@ -109,3 +109,7 @@ const List<String> emailStudents = [
   'vinicius.rodrigues@estudante.ufscar.br',
   'wilker.ribeiro42@estudante.ufscar.br'
 ];
+
+Future<void> makeJoseAdmin() async {
+  makeUserAdminFromApp('fiP5NpKzjNUSBMbCbOXhVN4TqZH3');
+}

@@ -25,6 +25,7 @@ O trabalho consiste de um aplicativo feito em um grupo de no máximo 3 pessoas. 
 * uma fonte que não seja a padrão
 * um projeto não trivial de interface. Isto é, utilize sombras, cores adequadas, etc. Veja vídeos de projeto de aplicativos sobre os elementos básicos do projeto de uma interface. 
 * adaptação para diferentes tipos de tela e sistemas operacionais. Use o widgetbook para testar.
+* deve ser possível gerar 
 
 
 As especificações do quarto, quinto e sexto trabalhos se seguem. 
