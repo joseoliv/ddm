@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flutter Interview Quiz – 45 Questions</title>
+<style>
+  body{margin:0;font-family:Segoe UI,Helvetica,Arial,sans-serif;display:flex;height:100vh}
+  #left{width:280px;background:#fafafa;border-right:1px solid #ddd;padding:20px;box-sizing:border-box}
+  #right{flex:1;padding:20px 30px;overflow-y:auto}
+  h2{margin-top:0}
+  .question{margin-bottom:25px}
+  .qtitle{font-weight:600;margin-bottom:8px}
+  .opt{cursor:pointer;border:1px solid #ccc;border-radius:4px;padding:8px 12px;margin:4px 0;transition:background .2s}
+  .opt:hover{background:#ffe4b3}
+  .chosen{background:#ffe4b3}
+  .correct{background:#4a90e2;color:#fff}
+  .wrong{background:#e74c3c;color:#fff}
+  #gradeBtn{width:100%;padding:10px;font-size:16px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer}
+  #gradeBtn:disabled{background:#95a5a6;cursor:not-allowed}
+  canvas{display:block;margin:15px auto}
+</style>
+</head>
+<body>
+
+<div id="left">
+  <h2>Progress</h2>
+  <canvas id="pizza" width="220" height="220"></canvas>
+  <button id="gradeBtn" onclick="gradeQuiz()">Grade</button>
+  <p id="afterGrade" style="display:none;font-size:14px;color:#555">
+    Correct: <span id="corr">0</span> | Incorrect: <span id="incorr">0</span>
+  </p>
+</div>
+
+<div id="right">
+  <h2>Flutter Interview Quiz – 45 Questions</h2>
+  <div id="quiz"></div>
+</div>
+
+<script>
+/* ----------  QUESTION BANK (45 total) ---------- */
+const bank = [
+/* ---------- 15 EASY ---------- */
+{q:"What programming language is Flutter primarily written in?",a:["Java","Kotlin","Dart","Swift","Python"],c:2},
+{q:"Flutter is a UI toolkit for building what kind of applications?",a:["Web applications only","Desktop applications only","Mobile applications only","Cross-platform applications (mobile, web, desktop)","Backend services"],c:3},
+{q:"Which widget is used to display text in Flutter?",a:["Image","Container","Text","Button","Icon"],c:2},
+{q:"What is the hot reload feature in Flutter used for?",a:["Reinstalling the app","Rebuilding the entire app from scratch","Quickly seeing changes to the UI without losing application state","Deploying the app to a production server","Compiling the app for a specific platform"],c:2},
+{q:"In Flutter, everything is a:",a:["Function","Class","Widget","Module","Component"],c:2},
+{q:"Which command is used to create a new Flutter project?",a:["flutter build","flutter run","flutter create","flutter install","flutter pub get"],c:2},
+{q:"What is the main function in a Dart application?",a:["start()","run()","main()","init()","execute()"],c:2},
+{q:"Which widget arranges its children in a vertical array?",a:["Row","Column","Stack","Wrap","Expanded"],c:1},
+{q:"Which widget arranges its children in a horizontal array?",a:["Column","Stack","Row","GridView","ListView"],c:2},
+{q:"What is a StatelessWidget?",a:["A widget that can change its state during its lifetime.","A widget that requires a database connection.","A widget that does not require any build method.","A widget that does not have mutable state.","A widget used only for animation."],c:3},
+{q:"What is a StatefulWidget?",a:["A widget that never changes its appearance.","A widget that cannot interact with user input.","A widget that can change its state during its lifetime.","A widget used for static content only.","A widget that has no build method."],c:2},
+{q:"What does pubspec.yaml file in a Flutter project contain?",a:["Source code of the application","Application icon and splash screen","Project dependencies and metadata","User interface layout","Test files"],c:2},
+{q:"Which IDE is commonly used for Flutter development?",a:["Xcode","Android Studio / VS Code","Eclipse","Sublime Text","Notepad++"],c:1},
+{q:"What is the purpose of the MaterialApp widget?",a:["To create a backend server.","To provide a basic UI structure for Material Design apps.","To manage app permissions.","To display images.","To handle user authentication."],c:1},
+{q:"Which of the following is NOT a fundamental concept in Flutter?",a:["Widgets","Hot Reload","Virtual DOM","Dart Language","Skia Graphics Engine"],c:2},
+
+/* ---------- 15 MEDIUM (original) ---------- */
+{q:"What is the purpose of the setState() method in a StatefulWidget?",a:["To save the current state to persistent storage.","To rebuild the widget's UI to reflect changes in its state.","To navigate to a new screen.","To initialize the widget's state.","To dispose of the widget."],c:1},
+{q:"Which of these is the correct way to add an image from assets in Flutter?",a:["Image.network('path/to/image.png')","Image.file('path/to/image.png')","Image.asset('assets/image.png')","Image.url('assets/image.png')","Image.data('assets/image.png')"],c:2},
+{q:"How do you define a constant widget in Flutter for performance optimization?",a:["By using the static keyword.","By prefixing the widget constructor with const.","By extending ImmutableWidget.","By setting isConstant: true.","Flutter automatically optimizes all widgets."],c:1},
+{q:"What is the primary function of Provider in Flutter?",a:["For handling HTTP requests.","For state management, making it easy to pass data down the widget tree.","For animating widgets.","For storing user preferences locally.","For performing background tasks."],c:1},
+{q:"Which widget allows you to create a scrollable list of children that are only built when they are visible?",a:["Column","Row","ListView.builder","SingleChildScrollView","Container"],c:2},
+{q:"What is the BuildContext in Flutter?",a:["The current application theme.","A handle to the location of a widget in the widget tree.","The entire build process of an application.","A database connection object.","A class for managing user input."],c:1},
+{q:"How do you navigate to a new screen (route) in Flutter?",a:["Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()))","Navigator.open(NewScreen())","Route.to(NewScreen())","Screen.navigate(NewScreen())","GoToScreen(NewScreen())"],c:0},
+{q:"What is the purpose of the Scaffold widget?",a:["To manage application state.","To provide a basic visual structure for the Material Design app, including AppBar, Drawer, SnackBar, etc.","To perform background computations.","To display images from the internet.","To handle user gestures."],c:1},
+{q:"Which of the following is used to control the layout and styling of widgets in Flutter?",a:["HTML","CSS","Dart properties and composition of widgets","XML","JSON"],c:2},
+{q:"What is the primary difference between Hot Reload and Hot Restart?",a:["Hot Reload restarts the entire app, Hot Restart only rebuilds the UI.","Hot Reload saves state, Hot Restart discards state.","Hot Reload is for Android, Hot Restart is for iOS.","Hot Reload is faster than Hot Restart.","Hot Reload is for debugging, Hot Restart is for testing."],c:1},
+{q:"Which of these packages is commonly used for making HTTP requests in Flutter?",a:["url_launcher","http","shared_preferences","image_picker","path_provider"],c:1},
+{q:"What is the correct way to add a padding to a widget in Flutter?",a:["Text('Hello').pad(10)","Padding(padding: EdgeInsets.all(10), child: Text('Hello'))","Text('Hello', padding: 10)","Container(padding: 10, child: Text('Hello'))","Text('Hello').withPadding(10)"],c:1},
+{q:"Which Widget is used to make a widget respond to touch events like taps?",a:["GestureDetector","TouchHandler","InputListener","TapResponder","InteractionWidget"],c:0},
+{q:"What is a \"Key\" in Flutter?",a:["A unique identifier for a widget in the widget tree, crucial for state preservation and efficient updates.","A security credential for your application.","A design token for theming.","A shortcut to a specific function.","A method to encrypt data."],c:0},
+{q:"When would you typically use Theme.of(context)?",a:["To access device camera.","To retrieve the current theme data (colors, text styles, etc.) defined for the application.","To play audio.","To get the current screen size.","To save user preferences."],c:1},
+
+/* ---------- 15 NEW MEDIUM (31-45) ---------- */
+{q:"Explain the concept of \"Widget Tree\" and \"Element Tree\" in Flutter.",a:["Both refer to the same logical structure of UI components.","The Widget Tree describes the configuration, while the Element Tree describes the actual instantiated objects on the screen.","The Widget Tree is for Android, Element Tree is for iOS.","The Widget Tree is built during Hot Reload, Element Tree during Hot Restart.","The Element Tree is a subset of the Widget Tree."],c:1},
+{q:"What is InheritedWidget and when is it typically used?",a:["A widget for handling asynchronous operations.","A widget that allows descendant widgets to easily access data higher up in the widget tree without passing it explicitly through every constructor.","A widget for animating complex transformations.","A widget used to manage network connections.","A widget for drawing custom shapes."],c:1},
+{q:"Describe the purpose of GlobalKey in Flutter.",a:["To define global variables accessible throughout the app.","To uniquely identify an element across the entire app and provide access to its state.","To specify global theme data.","To store application settings.","To manage user authentication tokens."],c:1},
+{q:"Which method is called exactly once when a StatefulWidget is inserted into the widget tree?",a:["build()","dispose()","didUpdateWidget()","initState()","deactivate()"],c:3},
+{q:"What is the didChangeDependencies() method used for in a StatefulWidget?",a:["To rebuild the widget when its own internal state changes.","To notify the widget that its dependencies (e.g., InheritedWidgets) have changed.","To perform cleanup when the widget is removed from the tree.","To initialize the widget's properties.","To handle user gestures."],c:1},
+{q:"Explain the \"keys\" concept in ListView.builder for efficient list rendering.",a:["Keys are used to encrypt the list items for security.","Keys help Flutter identify which elements correspond to which items in the list when items are added, removed, or reordered, improving performance and state preservation.","Keys are used for styling individual list items.","Keys define the order of items in the list.","Keys are only for debugging purposes."],c:1},
+{q:"What is the role of WidgetsBindingObserver?",a:["To observe changes in the application's lifecycle (e.g., pause, resume).","To observe changes in network connectivity.","To observe changes in user input.","To observe changes in a widget's size.","To observe changes in database records."],c:0},
+{q:"How does Flutter handle rendering performance, especially regarding widget rebuilding?",a:["It uses a Virtual DOM to compare changes, similar to React.","It always redraws the entire screen on every state change.","It uses a highly optimized rendering engine (Skia) and efficiently rebuilds only the affected parts of the widget tree.","It defers rendering until the app is paused.","It relies on the operating system's native UI rendering."],c:2},
+{q:"What is the purpose of FutureBuilder in Flutter?",a:["To create a future-dated event.","To build a widget tree based on the result of an asynchronous computation (a Future).","To define an animation sequence.","To manage local storage.","To handle recurring tasks."],c:1},
+{q:"When would you use StreamBuilder over FutureBuilder?",a:["StreamBuilder is for single asynchronous results, FutureBuilder for multiple.","StreamBuilder is for local data, FutureBuilder for remote data.","StreamBuilder is for handling a stream of asynchronous data events, while FutureBuilder is for a single asynchronous result.","StreamBuilder is for UI updates, FutureBuilder for backend operations.","They are interchangeable, just different syntax."],c:2},
+{q:"What is \"BLoC\" (Business Logic Component) pattern in Flutter?",a:["A pattern for structuring application code, separating business logic from the UI using streams and sinks.","A widget for displaying large blocks of text.","A new type of database for Flutter apps.","A built-in animation framework.","A tool for debugging layout issues."],c:0},
+{q:"What is the role of SafeArea widget?",a:["To ensure widgets are placed within the safe area of the screen, avoiding intrusions from system UI (e.g., notches, status bars).","To encrypt sensitive data.","To restrict user access to certain parts of the app.","To provide a secure network connection.","To save application state securely."],c:0},
+{q:"Explain the concept of \"tree shaking\" in Flutter.",a:["A process of randomly rearranging the widget tree for better performance.","A compiler optimization that removes unused code from the final application bundle, reducing app size.","A method for animating trees.","A way to detect memory leaks.","A debugging technique for UI layouts."],c:1},
+{q:"What is CustomPainter used for in Flutter?",a:["To paint the background of the entire application.","To perform custom 2D graphics rendering on a canvas.","To apply predefined themes to widgets.","To create custom fonts.","To modify the default behavior of existing widgets."],c:1},
+{q:"Which command would you use to deploy a Flutter web application?",a:["flutter run","flutter build web","flutter publish","flutter deploy","flutter serve"],c:1}
+];
+
+/* ----------  RENDER QUIZ  ---------- */
+const quizDiv = document.getElementById('quiz');
+const chosen = Array(45).fill(-1);
+let locked = false;
+
+bank.forEach((qObj, idx) => {
+  const qDiv = document.createElement('div');
+  qDiv.className = 'question';
+  qDiv.innerHTML = `<div class="qtitle">${idx + 1}. ${qObj.q}</div>` +
+    qObj.a.map((opt, i) =>
+      `<div class="opt" data-q="${idx}" data-opt="${i}" onclick="pick(${idx},${i})">${opt}</div>`
+    ).join('');
+  quizDiv.appendChild(qDiv);
+});
+
+function pick(q, opt) {
+  if (locked) return;
+  document.querySelectorAll(`[data-q="${q}"]`).forEach(d => d.classList.remove('chosen'));
+  document.querySelector(`[data-q="${q}"][data-opt="${opt}"]`).classList.add('chosen');
+  chosen[q] = opt;
+}
+
+/* ----------  GRADING (only place that updates pizza)  ---------- */
+function gradeQuiz() {
+  if (locked) return;
+  locked = true;
+  document.getElementById('gradeBtn').disabled = true;
+  let corr = 0;
+  bank.forEach((qObj, q) => {
+    const right = qObj.c;
+    const pickIdx = chosen[q];
+    const nodes = document.querySelectorAll(`[data-q="${q}"]`);
+    nodes.forEach(n => n.classList.remove('chosen'));
+    if (pickIdx === -1) { /* empty = wrong */ }
+    else if (pickIdx === right) { corr++; nodes[pickIdx].classList.add('correct'); }
+    else {
+      nodes[pickIdx].classList.add('wrong');
+      nodes[right].classList.add('correct');
+    }
+  });
+  document.getElementById('corr').textContent = corr;
+  document.getElementById('incorr').textContent = 45 - corr;
+  document.getElementById('afterGrade').style.display = 'block';
+  drawPizza(corr, 45 - corr);
+}
+
+/* ----------  PIZZA CHART (drawn only after Grade)  ---------- */
+const canvas = document.getElementById('pizza'), ctx = canvas.getContext('2d');
+const CX = 110, CY = 110, R = 90;
+function drawPizza(correct, incorrect) {
+  const tau = 2 * Math.PI;
+  ctx.clearRect(0, 0, 220, 220);
+  let start = 0;
+  function slice(ratio, color) {
+    const ang = ratio * tau;
+    ctx.beginPath(); ctx.moveTo(CX, CY); ctx.arc(CX, CY, R, start, start + ang); ctx.closePath();
+    ctx.fillStyle = color; ctx.fill();
+    start += ang;
+  }
+  slice(correct / 45, '#27ae60');
+  slice(incorrect / 45, '#e74c3c');
+  slice((45 - correct - incorrect) / 45, '#ecf0f1');
+  ctx.fillStyle = '#000'; ctx.font = '13px sans-serif';
+  ctx.fillText(`Correct: ${correct}`, 10, 200);
+  ctx.fillText(`Incorrect: ${incorrect}`, 10, 215);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flutter Quiz</title>
+    <style>
+        /* Basic Reset & Body */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f2f7; /* Light blue background */
+            color: #333;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 300px;
+            background-color: #263238; /* Darker blue-gray */
+            color: white;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+            position: sticky; /* Make sidebar sticky */
+            top: 0;
+            height: 100vh; /* Full height of viewport */
+            overflow-y: auto; /* Scrollable if content overflows */
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: #80deea; /* Light teal for heading */
+            text-align: center;
+        }
+
+        .pizza-chart {
+            width: 220px;
+            height: 220px;
+            margin-bottom: 25px;
+            position: relative;
+            background-color: #37474f; /* Slightly lighter background for chart area */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scoreChart {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .score-summary {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
+        .score-summary p {
+            margin: 5px 0;
+        }
+        #correctCount { color: #81c784; } /* Light green for correct */
+        #incorrectCount { color: #ef9a9a; } /* Light red for incorrect */
+
+
+        #gradeButton {
+            padding: 12px 25px;
+            background-color: #00838f; /* Teal button */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #gradeButton:hover {
+            background-color: #006064; /* Darker teal on hover */
+            transform: translateY(-2px);
+        }
+
+        #gradeButton:disabled {
+            background-color: #546e7a; /* Grayed out when disabled */
+            cursor: not-allowed;
+            transform: none;
+        }
+
+
+        /* Main Content Styling */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto; /* Make questions scrollable */
+        }
+
+        .main-content h1 {
+            color: #263238;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 2.5em;
+            border-bottom: 2px solid #b2ebf2; /* Light blue underline */
+            padding-bottom: 15px;
+        }
+
+        .questions-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .question-block {
+            background-color: white;
+            border: 1px solid #b2ebf2; /* Light blue border */
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
+
+        .question-block:hover {
+            transform: translateY(-3px);
+        }
+
+        .question-block p {
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #37474f; /* Dark blue-gray for question text */
+            font-size: 1.15em;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-list li {
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border: 1px solid #cfd8dc; /* Lighter gray border */
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #fcfcfc;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-size: 1em;
+        }
+
+        .options-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .options-list li:not(.chosen):hover {
+            background-color: #eceff1; /* Very light gray on hover */
+            border-color: #90a4ae;
+        }
+
+        /* Styles for chosen, correct, and incorrect answers */
+        .options-list li.chosen {
+            background-color: #ffe0b2; /* Light orange */
+            border-color: #ffb74d; /* Darker orange border */
+            color: #333;
+        }
+
+        .options-list li.correct {
+            background-color: #c8e6c9; /* Light green for correct */
+            border-color: #66bb6a; /* Green border */
+            color: #2e7d32; /* Darker green text */
+        }
+
+        .options-list li.incorrect {
+            background-color: #ffcdd2; /* Light red for incorrect */
+            border-color: #ef5350; /* Red border */
+            color: #c62828; /* Darker red text */
+        }
+
+        /* Ensure options are not clickable after grading */
+        .options-list.graded li {
+            cursor: default;
+        }
+        .options-list.graded li:hover {
+            background-color: #fcfcfc; /* Reset hover for graded items */
+            border-color: #cfd8dc;
+        }
+        .options-list.graded li.chosen:hover { /* Keep chosen style, but remove hover effect if not chosen */
+            background-color: #ffe0b2;
+            border-color: #ffb74d;
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto; /* Allow sidebar to collapse height */
+                position: relative;
+                padding-bottom: 20px;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .main-content h1 {
+                font-size: 2em;
+                margin-bottom: 30px;
+            }
+            .question-block {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar h2 {
+                font-size: 1.5em;
+            }
+            #gradeButton {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+            .main-content h1 {
+                font-size: 1.8em;
+            }
+            .question-block p {
+                font-size: 1em;
+            }
+            .options-list li {
+                font-size: 0.95em;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Your Quiz Progress</h2>
+            <div class="pizza-chart">
+                <canvas id="scoreChart"></canvas>
+            </div>
+            <div class="score-summary">
+                <p>Correct: <span id="correctCount">0</span></p>
+                <p>Incorrect: <span id="incorrectCount">0</span></p>
+                <p>Unanswered: <span id="unansweredCount">45</span></p>
+            </div>
+            <button id="gradeButton">Grade My Answers</button>
+        </div>
+        <div class="main-content">
+            <h1>Flutter Quiz Questions</h1>
+            <div id="questions-container" class="questions-container">
+                <!-- All 45 questions will be rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data for all 45 questions
+        const questionsData = [
+            // Easy Flutter Questions
+            {
+                question: "What programming language is Flutter primarily written in?",
+                options: ["Java", "Kotlin", "Dart", "Swift", "Python"],
+                correctAnswer: "Dart",
+                difficulty: "easy"
+            },
+            {
+                question: "Flutter is a UI toolkit for building what kind of applications?",
+                options: ["Web applications only", "Desktop applications only", "Mobile applications only", "Cross-platform applications (mobile, web, desktop)", "Backend services"],
+                correctAnswer: "Cross-platform applications (mobile, web, desktop)",
+                difficulty: "easy"
+            },
+            {
+                question: "Which widget is used to display text in Flutter?",
+                options: ["Image", "Container", "Text", "Button", "Icon"],
+                correctAnswer: "Text",
+                difficulty: "easy"
+            },
+            {
+                question: "What is the hot reload feature in Flutter used for?",
+                options: ["Reinstalling the app", "Rebuilding the entire app from scratch", "Quickly seeing changes to the UI without losing application state", "Deploying the app to a production server", "Compiling the app for a specific platform"],
+                correctAnswer: "Quickly seeing changes to the UI without losing application state",
+                difficulty: "easy"
+            },
+            {
+                question: "In Flutter, everything is a:",
+                options: ["Function", "Class", "Widget", "Module", "Component"],
+                correctAnswer: "Widget",
+                difficulty: "easy"
+            },
+            {
+                question: "Which command is used to create a new Flutter project?",
+                options: ["flutter build", "flutter run", "flutter create", "flutter install", "flutter pub get"],
+                correctAnswer: "flutter create",
+                difficulty: "easy"
+            },
+            {
+                question: "What is the main function in a Dart application?",
+                options: ["start()", "run()", "main()", "init()", "execute()"],
+                correctAnswer: "main()",
+                difficulty: "easy"
+            },
+            {
+                question: "Which widget arranges its children in a vertical array?",
+                options: ["Row", "Column", "Stack", "Wrap", "Expanded"],
+                correctAnswer: "Column",
+                difficulty: "easy"
+            },
+            {
+                question: "Which widget arranges its children in a horizontal array?",
+                options: ["Column", "Stack", "Row", "GridView", "ListView"],
+                correctAnswer: "Row",
+                difficulty: "easy"
+            },
+            {
+                question: "What is a StatefulWidget?",
+                options: ["A widget that can change its state during its lifetime.", "A widget that requires a database connection.", "A widget that does not require any build method.", "A widget that does not have mutable state.", "A widget used only for animation."],
+                correctAnswer: "A widget that does not have mutable state.",
+                difficulty: "easy"
+            },
+            {
+                question: "What is a StatefulWidget (Correct Answer re-listed for clarity)?",
+                options: ["A widget that never changes its appearance.", "A widget that cannot interact with user input.", "A widget that can change its state during its lifetime.", "A widget used for static content only.", "A widget that has no build method."],
+                correctAnswer: "A widget that can change its state during its lifetime.",
+                difficulty: "easy"
+            },
+            {
+                question: "What does pubspec.yaml file in a Flutter project contain?",
+                options: ["Source code of the application", "Application icon and splash screen", "Project dependencies and metadata", "User interface layout", "Test files"],
+                correctAnswer: "Project dependencies and metadata",
+                difficulty: "easy"
+            },
+            {
+                question: "Which IDE is commonly used for Flutter development?",
+                options: ["Xcode", "Android Studio / VS Code", "Eclipse", "Sublime Text", "Notepad++"],
+                correctAnswer: "Android Studio / VS Code",
+                difficulty: "easy"
+            },
+            {
+                question: "What is the purpose of the MaterialApp widget?",
+                options: ["To create a backend server.", "To provide a basic UI structure for Material Design apps.", "To manage app permissions.", "To display images.", "To handle user authentication."],
+                correctAnswer: "To provide a basic UI structure for Material Design apps.",
+                difficulty: "easy"
+            },
+            {
+                question: "Which of the following is NOT a fundamental concept in Flutter?",
+                options: ["Widgets", "Hot Reload", "Virtual DOM", "Dart Language", "Skia Graphics Engine"],
+                correctAnswer: "Virtual DOM",
+                difficulty: "easy"
+            },
+
+            // Medium Flutter Questions
+            {
+                question: "What is the purpose of the setState() method in a StatefulWidget?",
+                options: ["To save the current state to persistent storage.", "To rebuild the widget's UI to reflect changes in its state.", "To navigate to a new screen.", "To initialize the widget's state.", "To dispose of the widget."],
+                correctAnswer: "To rebuild the widget's UI to reflect changes in its state.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which of these is the correct way to add an image from assets in Flutter?",
+                options: ["Image.network('path/to/image.png')", "Image.file('path/to/image.png')", "Image.asset('assets/image.png')", "Image.url('assets/image.png')", "Image.data('assets/image.png')"],
+                correctAnswer: "Image.asset('assets/image.png')",
+                difficulty: "medium"
+            },
+            {
+                question: "How do you define a constant widget in Flutter for performance optimization?",
+                options: ["By using the static keyword.", "By prefixing the widget constructor with const.", "By extending ImmutableWidget.", "By setting isConstant: true.", "Flutter automatically optimizes all widgets."],
+                correctAnswer: "By prefixing the widget constructor with const.",
+                difficulty: "medium"
+            },
+            {
+                question: "What is the primary function of Provider in Flutter?",
+                options: ["For handling HTTP requests.", "For state management, making it easy to pass data down the widget tree.", "For animating widgets.", "For storing user preferences locally.", "For performing background tasks."],
+                correctAnswer: "For state management, making it easy to pass data down the widget tree.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which widget allows you to create a scrollable list of children that are only built when they are visible?",
+                options: ["Column", "Row", "ListView.builder", "SingleChildScrollView", "Container"],
+                correctAnswer: "ListView.builder",
+                difficulty: "medium"
+            },
+            {
+                question: "What is the BuildContext in Flutter?",
+                options: ["The current application theme.", "A handle to the location of a widget in the widget tree.", "The entire build process of an application.", "A database connection object.", "A class for managing user input."],
+                correctAnswer: "A handle to the location of a widget in the widget tree.",
+                difficulty: "medium"
+            },
+            {
+                question: "How can you navigate to a new screen (route) in Flutter?",
+                options: ["Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()))", "Navigator.open(NewScreen())", "Route.to(NewScreen())", "Screen.navigate(NewScreen())", "GoToScreen(NewScreen())"],
+                correctAnswer: "Navigator.push(context, MaterialPageRoute(builder: (context) => NewScreen()))",
+                difficulty: "medium"
+            },
+            {
+                question: "What is the purpose of the Scaffold widget?",
+                options: ["To manage application state.", "To provide a basic visual structure for the Material Design app, including AppBar, Drawer, SnackBar, etc.", "To perform background computations.", "To display images from the internet.", "To handle user gestures."],
+                correctAnswer: "To provide a basic visual structure for the Material Design app, including AppBar, Drawer, SnackBar, etc.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which of the following is used to control the layout and styling of widgets in Flutter?",
+                options: ["HTML", "CSS", "Dart properties and composition of widgets", "XML", "JSON"],
+                correctAnswer: "Dart properties and composition of widgets",
+                difficulty: "medium"
+            },
+            {
+                question: "What is the primary difference between Hot Reload and Hot Restart?",
+                options: ["Hot Reload restarts the entire app, Hot Restart only rebuilds the UI.", "Hot Reload saves state, Hot Restart discards state.", "Hot Reload is for Android, Hot Restart is for iOS.", "Hot Reload is faster than Hot Restart.", "Hot Reload is for debugging, Hot Restart is for testing."],
+                correctAnswer: "Hot Reload saves state, Hot Restart discards state.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which of these packages is commonly used for making HTTP requests in Flutter?",
+                options: ["url_launcher", "http", "shared_preferences", "image_picker", "path_provider"],
+                correctAnswer: "http",
+                difficulty: "medium"
+            },
+            {
+                question: "What is the correct way to add a padding to a widget in Flutter?",
+                options: ["Text('Hello').pad(10)", "Padding(padding: EdgeInsets.all(10), child: Text('Hello'))", "Text('Hello', padding: 10)", "Container(padding: 10, child: Text('Hello'))", "Text('Hello').withPadding(10)"],
+                correctAnswer: "Padding(padding: EdgeInsets.all(10), child: Text('Hello'))",
+                difficulty: "medium"
+            },
+            {
+                question: "Which Widget is used to make a widget respond to touch events like taps?",
+                options: ["GestureDetector", "TouchHandler", "InputListener", "TapResponder", "InteractionWidget"],
+                correctAnswer: "GestureDetector",
+                difficulty: "medium"
+            },
+            {
+                question: "What is a 'Key' in Flutter?",
+                options: ["A unique identifier for a widget in the widget tree, crucial for state preservation and efficient updates.", "A security credential for your application.", "A design token for theming.", "A shortcut to a specific function.", "A method to encrypt data."],
+                correctAnswer: "A unique identifier for a widget in the widget tree, crucial for state preservation and efficient updates.",
+                difficulty: "medium"
+            },
+            {
+                question: "When would you typically use Theme.of(context)?",
+                options: ["To access device camera.", "To retrieve the current theme data (colors, text styles, etc.) defined for the application.", "To play audio.", "To get the current screen size.", "To save user preferences."],
+                correctAnswer: "To retrieve the current theme data (colors, text styles, etc.) defined for the application.",
+                difficulty: "medium"
+            },
+
+            // More Difficult Flutter Questions
+            {
+                question: "Explain the concept of 'Widget Tree' and 'Element Tree' in Flutter.",
+                options: ["Both refer to the same logical structure of UI components.", "The Widget Tree describes the configuration, while the Element Tree describes the actual instantiated objects on the screen.", "The Widget Tree is for Android, Element Tree is for iOS.", "The Widget Tree is built during Hot Reload, Element Tree during Hot Restart.", "The Element Tree is a subset of the Widget Tree."],
+                correctAnswer: "The Widget Tree describes the configuration, while the Element Tree describes the actual instantiated objects on the screen.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is InheritedWidget and when is it typically used?",
+                options: ["A widget for handling asynchronous operations.", "A widget that allows descendant widgets to easily access data higher up in the widget tree without passing it explicitly through every constructor.", "A widget for animating complex transformations.", "A widget used to manage network connections.", "A widget for drawing custom shapes."],
+                correctAnswer: "A widget that allows descendant widgets to easily access data higher up in the widget tree without passing it explicitly through every constructor.",
+                difficulty: "difficult"
+            },
+            {
+                question: "Describe the purpose of GlobalKey in Flutter.",
+                options: ["To define global variables accessible throughout the app.", "To uniquely identify an element across the entire app and provide access to its state.", "To specify global theme data.", "To store application settings.", "To manage user authentication tokens."],
+                correctAnswer: "To uniquely identify an element across the entire app and provide access to its state.",
+                difficulty: "difficult"
+            },
+            {
+                question: "Which method is called exactly once when a StatefulWidget is inserted into the widget tree?",
+                options: ["build()", "dispose()", "didUpdateWidget()", "initState()", "deactivate()"],
+                correctAnswer: "initState()",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is the didChangeDependencies() method used for in a StatefulWidget?",
+                options: ["To rebuild the widget when its own internal state changes.", "To notify the widget that its dependencies (e.g., InheritedWidgets) have changed.", "To perform cleanup when the widget is removed from the tree.", "To initialize the widget's properties.", "To handle user gestures."],
+                correctAnswer: "To notify the widget that its dependencies (e.g., InheritedWidgets) have changed.",
+                difficulty: "difficult"
+            },
+            {
+                question: "Explain the 'keys' concept in ListView.builder for efficient list rendering.",
+                options: ["Keys are used to encrypt the list items for security.", "Keys help Flutter identify which elements correspond to which items in the list when items are added, removed, or reordered, improving performance and state preservation.", "Keys are used for styling individual list items.", "Keys define the order of items in the list.", "Keys are only for debugging purposes."],
+                correctAnswer: "Keys help Flutter identify which elements correspond to which items in the list when items are added, removed, or reordered, improving performance and state preservation.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is the role of WidgetsBindingObserver?",
+                options: ["To observe changes in the application's lifecycle (e.g., pause, resume).", "To observe changes in network connectivity.", "To observe changes in user input.", "To observe changes in a widget's size.", "To observe changes in database records."],
+                correctAnswer: "To observe changes in the application's lifecycle (e.g., pause, resume).",
+                difficulty: "difficult"
+            },
+            {
+                question: "How does Flutter handle rendering performance, especially regarding widget rebuilding?",
+                options: ["It uses a Virtual DOM to compare changes, similar to React.", "It always redraws the entire screen on every state change.", "It uses a highly optimized rendering engine (Skia) and efficiently rebuilds only the affected parts of the widget tree.", "It defers rendering until the app is paused.", "It relies on the operating system's native UI rendering."],
+                correctAnswer: "It uses a highly optimized rendering engine (Skia) and efficiently rebuilds only the affected parts of the widget tree.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is the purpose of FutureBuilder in Flutter?",
+                options: ["To create a future-dated event.", "To build a widget tree based on the result of an asynchronous computation (a Future).", "To define an animation sequence.", "To manage local storage.", "To handle recurring tasks."],
+                correctAnswer: "To build a widget tree based on the result of an asynchronous computation (a Future).",
+                difficulty: "difficult"
+            },
+            {
+                question: "When would you use StreamBuilder over FutureBuilder?",
+                options: ["StreamBuilder is for single asynchronous results, FutureBuilder for multiple.", "StreamBuilder is for local data, FutureBuilder for remote data.", "StreamBuilder is for handling a stream of asynchronous data events, while FutureBuilder is for a single asynchronous result.", "StreamBuilder is for UI updates, FutureBuilder for backend operations.", "They are interchangeable, just different syntax."],
+                correctAnswer: "StreamBuilder is for handling a stream of asynchronous data events, while FutureBuilder is for a single asynchronous result.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is 'BLoC' (Business Logic Component) pattern in Flutter?",
+                options: ["A pattern for structuring application code, separating business logic from the UI using streams and sinks.", "A widget for displaying large blocks of text.", "A new type of database for Flutter apps.", "A built-in animation framework.", "A tool for debugging layout issues."],
+                correctAnswer: "A pattern for structuring application code, separating business logic from the UI using streams and sinks.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is the role of SafeArea widget?",
+                options: ["To ensure widgets are placed within the safe area of the screen, avoiding intrusions from system UI (e.g., notches, status bars).", "To encrypt sensitive data.", "To restrict user access to certain parts of the app.", "To provide a secure network connection.", "To save application state securely."],
+                correctAnswer: "To ensure widgets are placed within the safe area of the screen, avoiding intrusions from system UI (e.g., notches, status bars).",
+                difficulty: "difficult"
+            },
+            {
+                question: "Explain the concept of 'tree shaking' in Flutter.",
+                options: ["A process of randomly rearranging the widget tree for better performance.", "A compiler optimization that removes unused code from the final application bundle, reducing app size.", "A method for animating trees.", "A way to detect memory leaks.", "A debugging technique for UI layouts."],
+                correctAnswer: "A compiler optimization that removes unused code from the final application bundle, reducing app size.",
+                difficulty: "difficult"
+            },
+            {
+                question: "What is CustomPainter used for in Flutter?",
+                options: ["To paint the background of the entire application.", "To perform custom 2D graphics rendering on a canvas.", "To apply predefined themes to widgets.", "To create custom fonts.", "To modify the default behavior of existing widgets."],
+                correctAnswer: "To perform custom 2D graphics rendering on a canvas.",
+                difficulty: "difficult"
+            },
+            {
+                question: "Which command would you use to deploy a Flutter web application?",
+                options: ["flutter run", "flutter build web", "flutter publish", "flutter deploy", "flutter serve"],
+                correctAnswer: "flutter build web",
+                difficulty: "difficult"
+            }
+        ];
+
+        let userAnswers = {}; // Stores chosen answer for each question: {questionIndex: "chosenOption"}
+        let graded = false; // Flag to prevent changing answers after grading
+        let chartInstance; // To hold the Chart.js instance
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const questionsContainer = document.getElementById('questions-container');
+            const gradeButton = document.getElementById('gradeButton');
+            const correctCountSpan = document.getElementById('correctCount');
+            const incorrectCountSpan = document.getElementById('incorrectCount');
+            const unansweredCountSpan = document.getElementById('unansweredCount');
+
+            // Function to render all questions dynamically
+            function renderQuestions() {
+                questionsContainer.innerHTML = ''; // Clear existing content
+                questionsData.forEach((q, index) => {
+                    const questionBlock = document.createElement('div');
+                    questionBlock.classList.add('question-block');
+                    questionBlock.dataset.questionIndex = index; // Store index for easy lookup
+
+                    const questionText = document.createElement('p');
+                    questionText.textContent = `${index + 1}. ${q.question}`;
+                    questionBlock.appendChild(questionText);
+
+                    const optionsList = document.createElement('ul');
+                    optionsList.classList.add('options-list');
+
+                    q.options.forEach(option => {
+                        const optionItem = document.createElement('li');
+                        optionItem.textContent = option;
+                        optionItem.dataset.value = option; // Store option text
+
+                        // If user previously answered, mark it
+                        if (userAnswers[index] === option) {
+                            optionItem.classList.add('chosen');
+                        }
+
+                        optionItem.addEventListener('click', () => {
+                            if (!graded) { // Only allow selection if not graded
+                                // Remove 'chosen' from all options for this question
+                                optionsList.querySelectorAll('li').forEach(item => {
+                                    item.classList.remove('chosen');
+                                });
+                                // Add 'chosen' to the clicked option
+                                optionItem.classList.add('chosen');
+                                userAnswers[index] = option; // Store the chosen answer
+                                updateChart(); // Update chart instantly
+                            }
+                        });
+                        optionsList.appendChild(optionItem);
+                    });
+                    questionBlock.appendChild(optionsList);
+                    questionsContainer.appendChild(questionBlock);
+                });
+            }
+
+            // Function to update the pizza chart and score summary
+            function updateChart() {
+                let correct = 0;
+                let incorrect = 0;
+                let unanswered = 0;
+                let answered = Object.keys(userAnswers).length;
+
+                if (graded) {
+                    questionsData.forEach((q, index) => {
+                        if (userAnswers[index] === q.correctAnswer) {
+                            correct++;
+                        } else if (userAnswers[index]) { // If an answer was chosen, but it's not correct
+                            incorrect++;
+                        }
+                    });
+                    unanswered = questionsData.length - (correct + incorrect);
+                } else {
+                    unanswered = questionsData.length - answered;
+                    // Before grading, the chart can represent 'answered' vs 'unanswered'
+                    correct = answered; // Temporarily use 'correct' for answered count
+                    incorrect = unanswered; // Temporarily use 'incorrect' for unanswered
+                }
+
+
+                correctCountSpan.textContent = correct;
+                incorrectCountSpan.textContent = incorrect;
+                unansweredCountSpan.textContent = unanswered;
+
+
+                const ctx = document.getElementById('scoreChart').getContext('2d');
+                if (chartInstance) {
+                    chartInstance.destroy(); // Destroy existing chart before creating a new one
+                }
+
+                // Define colors based on graded state
+                let labels = graded ? ['Correct', 'Incorrect', 'Unanswered'] : ['Answered', 'Unanswered'];
+                let dataValues = graded ? [correct, incorrect, unanswered] : [answered, unanswered];
+                let backgroundColors = graded ? ['#81c784', '#ef9a9a', '#90a4ae'] : ['#64b5f6', '#bdbdbd']; // Green, Red, Gray / Blue, Light Gray
+
+                chartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor: backgroundColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: 'white', // Legend text color
+                                    font: {
+                                        size: 14
+                                    }
+                                }
+                            },
+                            title: {
+                                display: false,
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Grade button event listener
+            gradeButton.addEventListener('click', () => {
+                if (!graded) {
+                    graded = true;
+                    gradeButton.disabled = true; // Disable button after grading
+                    gradeButton.textContent = "Graded!";
+
+                    questionsData.forEach((q, index) => {
+                        const questionBlock = questionsContainer.querySelector(`[data-question-index="${index}"]`);
+                        const optionsList = questionBlock.querySelector('.options-list');
+                        optionsList.classList.add('graded'); // Add class to prevent hover effects
+
+                        optionsList.querySelectorAll('li').forEach(optionItem => {
+                            optionItem.classList.remove('chosen'); // Remove light orange
+
+                            if (optionItem.dataset.value === q.correctAnswer) {
+                                optionItem.classList.add('correct'); // Highlight correct in blue/green
+                            }
+
+                            // If user picked an answer and it's not the correct one, mark it incorrect
+                            if (userAnswers[index] === optionItem.dataset.value && userAnswers[index] !== q.correctAnswer) {
+                                optionItem.classList.add('incorrect'); // Highlight chosen incorrect in red
+                            }
+                        });
+                    });
+                    updateChart(); // Final chart update with graded results
+                    alert("Your answers have been graded!");
+                }
+            });
+
+            // Initial render and chart update
+            renderQuestions();
+            updateChart();
+        });
+    </script>
+</body>
+</html>
