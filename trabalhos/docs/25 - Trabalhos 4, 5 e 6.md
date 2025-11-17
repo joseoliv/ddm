@@ -25,11 +25,8 @@ O trabalho consiste de um aplicativo feito em um grupo de no máximo 3 pessoas. 
 * uma fonte que não seja a padrão
 * um projeto não trivial de interface. Isto é, utilize sombras, cores adequadas, etc. Veja vídeos de projeto de aplicativos sobre os elementos básicos do projeto de uma interface. 
 * adaptação para diferentes tipos de tela e sistemas operacionais. Use o widgetbook para testar.
-* suba o sexto trabalho para uma página web qualquer (ex: https://www.netlify.com/). Contudo, não é exigido que o laiaute do app esteja adaptado para a web. Coloque o endereço web do trabalho em 
-      https://docs.google.com/spreadsheets/d/1LN7QmsrHXjbFa91gRyZt4nubFh-BFJSHm3oPZs4LA54/edit?usp=sharing
 
-
-As especificações do quarto, quinto e sexto trabalhos se seguem. 
+As especificações do quarto, quinto e sexto trabalhos se seguem.  
 
 ### Quarto trabalho (10/nov)
 
@@ -45,12 +42,20 @@ Espera-se, para o quarto trabalho:
 - gerenciamento de estado
 - tema claro e escuro
 - use o widgetbook
+- suba este trabalho para uma página web qualquer (ex: https://www.netlify.com/) que suporte implantação contínua (_continuous deployment_) com o github. Isto é, cada vez que você fizer um _commit_ no github, o app é automaticamente compilado e carregado na página. O nome da página deve ter os nomes dos integrantes do grupo separados por hífen (ex: newton-gauss.netlify.com). Para isto, instale o app do netlify no github (https://github.com/apps/netlify), assumindo que você usa github. 
+- Não é exigido que o laiaute do app esteja adaptado para a web. Coloque o endereço web do trabalho em 
+      https://docs.google.com/spreadsheets/d/1LN7QmsrHXjbFa91gRyZt4nubFh-BFJSHm3oPZs4LA54/edit?usp=sharing
+ 
+- na entrevista, será cobrado se cada aluno do grupo sabe fazer o seguinte:
+  * usar o Inspector do Flutter DevTools (ícone: lente dentro de um quase quadrado do lado esquerdo)
+  * usar o Flutter property editor (ícone: caneta ou lápis)
 
 ### Sexto trabalho (8/dez)
 
 - internacionalização
 - o aplicativo deve ser funcional
 - use o widgetbook
+- os três últimos itens do quinto trabalho, a partir de *suba este ...*, também são exigidos neste sexto trabalho.
 
 ## Orientações Gerais
 
