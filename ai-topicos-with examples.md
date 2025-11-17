@@ -1921,6 +1921,8 @@ Videos:
 
 [Monetizing apps with Flutter](https://www.youtube.com/watch?v=m0d_pbgeeG8&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h&index=37&t=2s) - A presentation on different methods for monetizing Flutter apps, including ads and in-app purchases.
 
+[What is Push Notifications](https://www.youtube.com/shorts/4tcN7xsXJ8c)
+
 [Flutter Push Notifications using Firebase](https://www.youtube.com/watch?v=k0zGEbiDJcQ) - A tutorial on how to implement push notifications using Firebase Cloud Messaging (FCM).
 
 [OneSignal Notifications in Flutter Made Easy](https://youtube.com/watch?v=v2BzkbCC8CM&list=PLgSjzNw7mrQH7y7pIyiZ5nYt3T_0gBs2h) - A tutorial demonstrating how to use the OneSignal service as an alternative to Firebase for push notifications.

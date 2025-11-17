@@ -25,7 +25,8 @@ O trabalho consiste de um aplicativo feito em um grupo de no máximo 3 pessoas. 
 * uma fonte que não seja a padrão
 * um projeto não trivial de interface. Isto é, utilize sombras, cores adequadas, etc. Veja vídeos de projeto de aplicativos sobre os elementos básicos do projeto de uma interface. 
 * adaptação para diferentes tipos de tela e sistemas operacionais. Use o widgetbook para testar.
-* deve ser possível gerar 
+* suba o sexto trabalho para uma página web qualquer (ex: https://www.netlify.com/). Contudo, não é exigido que o laiaute do app esteja adaptado para a web. Coloque o endereço web do trabalho em 
+      https://docs.google.com/spreadsheets/d/1LN7QmsrHXjbFa91gRyZt4nubFh-BFJSHm3oPZs4LA54/edit?usp=sharing
 
 
 As especificações do quarto, quinto e sexto trabalhos se seguem. 
