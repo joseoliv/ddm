@@ -46,16 +46,14 @@ Espera-se, para o quarto trabalho:
 - Não é exigido que o laiaute do app esteja adaptado para a web. Coloque o endereço web do trabalho em 
       https://docs.google.com/spreadsheets/d/1LN7QmsrHXjbFa91gRyZt4nubFh-BFJSHm3oPZs4LA54/edit?usp=sharing
  
-- na entrevista, será cobrado se cada aluno do grupo sabe fazer o seguinte:
-  * usar o Inspector do Flutter DevTools (ícone: lente dentro de um quase quadrado do lado esquerdo)
-  * usar o Flutter property editor (ícone: caneta ou lápis)
+
 
 ### Sexto trabalho (8/dez)
 
 - internacionalização
 - o aplicativo deve ser funcional
 - use o widgetbook
-- os três últimos itens do quinto trabalho, a partir de *suba este ...*, também são exigidos neste sexto trabalho.
+- os dois últimos itens do quinto trabalho, a partir de *suba este ...*, também são exigidos neste sexto trabalho.
 
 ## Orientações Gerais
 
