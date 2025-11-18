@@ -41,7 +41,7 @@ Espera-se, para o quarto trabalho:
 - acesso à API
 - gerenciamento de estado
 - tema claro e escuro
-- use o widgetbook
+- use o widgetbook para todo widget que é o todo o aplicativo
 - suba este trabalho para uma página web qualquer (ex: https://www.netlify.com/) que suporte implantação contínua (_continuous deployment_) com o github. Isto é, cada vez que você fizer um _commit_ no github, o app é automaticamente compilado e carregado na página. O nome da página deve ter os nomes dos integrantes do grupo separados por hífen (ex: newton-gauss.netlify.com). Para isto, instale o app do netlify no github (https://github.com/apps/netlify), assumindo que você usa github. 
 - Não é exigido que o laiaute do app esteja adaptado para a web. Coloque o endereço web do trabalho em 
       https://docs.google.com/spreadsheets/d/1LN7QmsrHXjbFa91gRyZt4nubFh-BFJSHm3oPZs4LA54/edit?usp=sharing
@@ -52,7 +52,7 @@ Espera-se, para o quarto trabalho:
 
 - internacionalização
 - o aplicativo deve ser funcional
-- use o widgetbook
+- use o widgetbook para todo widget que é o todo o aplicativo
 - os dois últimos itens do quinto trabalho, a partir de *suba este ...*, também são exigidos neste sexto trabalho.
 
 ## Orientações Gerais
