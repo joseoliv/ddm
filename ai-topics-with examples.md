@@ -40,7 +40,7 @@ a.  [Install VSCode.](https://code.visualstudio.com/download) - The official dow
 b.  [Setting up the Flutter environment.](https://docs.flutter.dev/get-started/install) - The official, step-by-step guide from the Flutter team on how to install the SDK on your operating system.
 
 c.  Install the following extensions for VSCode. They are optional, but very useful.
-    *GitHub Copilot, GitHub Copilot Chat, Bookmarks, Bracket Pair Color DLW, GitHub Pull Request, GitHub Repositories, Image Preview, Pubspec Assist, Remote Repositories*.
+    *GitHub Copilot, Live Share, ARB editor, Flutter Intl, GitHub Copilot Chat, Image Preview, Pubspec Assist,  Bookmarks, Bracket Pair Color DLW, GitHub Pull Request, GitHub Repositories, Remote Repositories*.
 
 # Introduction to Dart
 
@@ -619,7 +619,26 @@ The command “flutter create" creates a file named `pubspec.yaml` that specifie
 
 There are differences between [dependencies and dev_dependencies.](https://medium.com/@chetan.akarte/what-are-dependencies-dev-dependencies-in-a-flutter-project-480d4877d719#:~:text=In%20a%20Flutter%20project%2C%20dependencies,roles%20in%20the%20development%20lifecycle.) - An article clarifying the distinction between runtime dependencies (needed for the app to run) and development dependencies (only needed for testing and development).
 
-“To automatically upgrade your package dependencies to the latest versions consider running ‘flutter pub upgrade –major-versions‘".
+To reload the dependencies, run 
+	```flutter pub get```
+
+If you want to force a full dependency refresh:
+```
+flutter clean
+flutter pub get
+```
+
+
+If it is a pure Dart project (not Flutter), use:
+```
+dart pub get
+```
+
+
+To automatically upgrade your package dependencies to the latest versions consider running 
+```
+flutter pub upgrade –major-versions
+```
 
 ## Basic Widgets
 
@@ -779,6 +798,14 @@ In the simplest example, the layout conversation looks like this:
 
 In Flutter, this layout conversation is often expressed with the simplified phrase, “Constraints go down. Sizes go up. Parent sets the position."
 
+To view the layout, click Ctrl-Shift-P in VSCode and type 
+```
+	Flutter: Toggle Debug Paint
+```
+
+To remove the layout, click the same think again. 
+
+There is an interesting page on constraints: [Understanding constraints](https://docs.flutter.dev/ui/layout/constraints).
 ## Widget lifecycle
 
 Widgets are created, pass through a series of steps, and finish their short lifes in a garbage can. Their life journey is described by the following articles:

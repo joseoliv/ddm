@@ -76,7 +76,7 @@ class _PrimeiroTrabalhoState extends State<PrimeiroTrabalho> {
     "IconButton": WIconButton.new,
     "Checkbox": WCheckbox.new,
     "Switch": WSwitch.new,
-    "Radio": WRadio.new,
+    "Radio": () => WRadio(groupValue: '', value: '', onChanged: (_) {}),
     "DatePickerDialog": WDatePickerDialog.new,
     "TimePickerDialog": WTimePickerDialog.new,
   };

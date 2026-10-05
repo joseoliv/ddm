@@ -1,171 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:test/traducoes/loc.dart';
+import 'package:test/ex_future.dart';
+// import 'package:test/ex_isolate.dart';
+import 'package:test/ex_riverpod_future.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  Future<void> mainFutureResult = mainFuture();
+  mainFutureResult
+      .then((_) {
+        debugPrint(
+          'At main, in the anonymous function after mainFuture() Completed',
+        );
+      })
+      .catchError((error) {
+        debugPrint('Error occurred in mainFuture: $error');
+      })
+      .whenComplete(() {
+        debugPrint(
+          'At main, in the anonymous function after mainFuture() Completed (whenComplete)',
+        );
+        debugPrint('At main, after mainFuture() Completed');
+      });
+  runApp(const AppRiverpodFuture());
 }
 
-class MainApp extends StatefulWidget {
-  const MainApp({super.key});
-
-  @override
-  State<MainApp> createState() => _MainAppState();
+Future<String> loginUser() async {
+  try {
+    await Future.delayed(const Duration(seconds: 2));
+    return 'User logged in successfully!';
+  } catch (error) {
+    return 'Error: $error';
+  }
 }
 
-class _MainAppState extends State<MainApp> {
-  final Color _color = Colors.blue;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    /// use LayoutBuilder to get the constraints
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          /// icons home, search, settings
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    Translate.getTranslation.home,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(width: 8),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    Translate.getTranslation.search,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(width: 8),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    Translate.getTranslation.settings,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(width: 8),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
-                ],
-              ),
-            ],
-          ),
-        ),
+        backgroundColor: Colors.blue[100],
+        appBar: AppBar(title: const Text('FutureBuilder Widget')),
         body: Center(
-          child:
-              /// Use layout builder to get the constraints
-              /// and change the color of the container based on the width
-              /// menu with portuguese, english, french
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth < 600) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Translate.getTranslation.appTitle,
-                          style: TextStyle(fontSize: 32, color: _color),
-                        ),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('pt');
-                            });
-                          },
-                          child: Text('Português'),
-                        ),
-                        SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('en');
-                            });
-                          },
-                          child: Text('English'),
-                        ),
-                        SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('fr');
-                            });
-                          },
-                          child: Text('Français'),
-                        ),
-                      ],
-                    );
+          child: FutureBuilder(
+            future: loginUser(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return const Text('No connection');
+                case ConnectionState.waiting:
+                  return const CircularProgressIndicator();
+                case ConnectionState.active:
+                // TODO: Handle this case.
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
                   } else {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Translate.getTranslation.appTitle,
-                          style: TextStyle(fontSize: 32, color: _color),
-                        ),
-                        SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('pt');
-                            });
-                          },
-                          child: Text('Português'),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('en');
-                            });
-                          },
-                          child: Text('English'),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              Translate.getTranslation =
-                                  Translate.getTranslationFromLocale('fr');
-                            });
-                          },
-                          child: Text('Français'),
-                        ),
-                      ],
-                    );
+                    return Text('Message: ${snapshot.data}');
                   }
-                },
-              ),
+              }
+            },
+          ),
         ),
       ),
     );
   }
-}
-
-// This example shows how *not* to write asynchronous Dart code.
-
-String createOrderMessage() {
-  var order = fetchUserOrder();
-  return 'Your order is: $order';
-}
-
-Future<String> fetchUserOrder() =>
-    // Imagine that this function is more complex and slow.
-    Future.delayed(const Duration(seconds: 2), () => 'Large Latte');
-
-void main2() {
-  print(createOrderMessage());
 }
